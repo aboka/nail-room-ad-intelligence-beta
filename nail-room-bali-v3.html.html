@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Nail Room – Ad Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --black:   #0f0d0d;
+  --black2:  #1a1718;
+  --black3:  #242022;
+  --pink:    #e8829a;
+  --pink2:   #f0a0b4;
+  --pink3:   #fce8ee;
+  --white:   #ffffff;
+  --offwhite:#f7f3f4;
+  --muted:   rgba(255,255,255,0.45);
+  --border:  rgba(232,130,154,0.2);
+  --green:   #5aad7a;
+  --red:     #e07070;
+  --gold:    #c9a84c;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Libre Baskerville', serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--black2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-box {
+  background: var(--black);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.logo-the {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--white);
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.logo-nail {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pink);
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+
+.logo-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  color: var(--white);
+  letter-spacing: 0.5px;
+}
+
+.logo-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* ── STEP BAR ── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+
+.step-item.active { opacity: 1; }
+.step-item.done   { opacity: 0.6; }
+
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--pink);
+}
+
+.step-item.active .step-num {
+  background: var(--pink);
+  color: var(--black);
+  border-color: var(--pink);
+}
+
+.step-item.done .step-num {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--black);
+}
+
+.step-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--white);
+  letter-spacing: 2px;
+}
+
+.step-div {
+  width: 20px; height: 1px;
+  background: var(--border);
+}
+
+/* ── MAIN ── */
+.main {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── UPLOAD ── */
+.upload-hero {
+  max-width: 540px;
+  margin: 56px auto 0;
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--pink);
+  margin-bottom: 18px;
+}
+
+.upload-title {
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+.upload-title em {
+  color: var(--pink);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.upload-sub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  font-style: italic;
+}
+
+.dropzone {
+  border: 1.5px dashed rgba(232,130,154,0.4);
+  border-radius: 8px;
+  padding: 52px 40px;
+  background: var(--black2);
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.dropzone:hover, .dropzone.over {
+  border-color: var(--pink);
+  background: var(--black3);
+  box-shadow: 0 0 40px rgba(232,130,154,0.08);
+}
+
+.dropzone input {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+
+.dz-icon { font-size: 34px; margin-bottom: 14px; }
+
+.dz-title {
+  font-size: 20px;
+  color: var(--white);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.dz-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--pink);
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.api-row {
+  margin-top: 16px;
+  display: flex;
+  gap: 0;
+}
+
+.api-input {
+  flex: 1;
+  padding: 11px 16px;
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.api-input:focus { border-color: var(--pink); }
+.api-input::placeholder { color: rgba(255,255,255,0.2); }
+
+.api-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  margin-top: 8px;
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+
+.api-note a { color: var(--pink); }
+
+/* ── STATS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat {
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 18px;
+}
+
+.stat-val {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+/* ── TABLE ── */
+.table-wrap {
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.table-head {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-title {
+  font-size: 20px;
+  font-style: italic;
+  color: var(--white);
+}
+
+table { width:100%; border-collapse:collapse; }
+
+th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--pink);
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--black3);
+  border-bottom: 1px solid var(--border);
+  opacity: 0.8;
+}
+
+td {
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(232,130,154,0.07);
+  font-size: 13px;
+  vertical-align: middle;
+  color: rgba(255,255,255,0.85);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--black3); }
+
+.badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.b-active { background: rgba(90,173,122,0.12); color: var(--green); border: 1px solid rgba(90,173,122,0.3); }
+.b-paused { background: rgba(224,112,112,0.1); color: var(--red);   border: 1px solid rgba(224,112,112,0.25); }
+
+.dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px; }
+.dot-good { background: var(--green); }
+.dot-warn { background: var(--gold); }
+.dot-bad  { background: var(--red); }
+
+.ctr-wrap { display:flex;align-items:center;gap:8px; }
+.ctr-bg   { width:56px;height:3px;background:rgba(232,130,154,0.15);border-radius:2px; }
+.ctr-fill { height:3px;border-radius:2px;background:var(--pink); }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  padding: 12px 26px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pink {
+  background: var(--pink);
+  color: var(--black);
+  font-weight: 500;
+}
+
+.btn-pink:hover { background: var(--pink2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,130,154,0.3); }
+.btn-pink:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--pink);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover { border-color: var(--pink); }
+
+/* ── AI CARD ── */
+.ai-card {
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+.ai-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.ai-card-title {
+  font-size: 22px;
+  font-style: italic;
+  color: var(--white);
+}
+
+.ai-card-title span { color: var(--pink); }
+
+.ai-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  letter-spacing: 2px;
+  opacity: 0.5;
+  margin-top: 4px;
+}
+
+.ai-body { min-height: 60px; }
+
+.ai-placeholder {
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(255,255,255,0.2);
+  padding: 10px 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--pink);
+  font-style: italic;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.spin {
+  width: 18px;height:18px;
+  border: 2px solid rgba(232,130,154,0.2);
+  border-top-color: var(--pink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ai-text {
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.8);
+  white-space: pre-wrap;
+  font-style: italic;
+}
+
+/* ── PROCEED ── */
+.proceed-wrap {
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* ── COPY SCREEN ── */
+.copy-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+}
+
+.copy-title {
+  font-size: 30px;
+  font-style: italic;
+  color: var(--white);
+}
+
+.copy-title span { color: var(--pink); }
+
+.back-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--pink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.back-btn:hover { opacity: 1; }
+
+.copy-grid { display: flex; flex-direction: column; gap: 20px; }
+
+.copy-card {
+  background: var(--black2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.copy-card-head {
+  padding: 15px 22px;
+  background: var(--black3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copy-card-name {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--white);
+}
+
+.copy-card-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  letter-spacing: 1px;
+  opacity: 0.6;
+}
+
+.copy-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.copy-col { padding: 20px 22px; }
+
+.copy-col:first-child { border-right: 1px solid var(--border); }
+
+.col-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.copy-col:first-child .col-label { color: var(--red); }
+.copy-col:last-child  .col-label { color: var(--green); }
+
+.field { margin-bottom: 12px; }
+
+.field-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--pink);
+  opacity: 0.6;
+  margin-bottom: 5px;
+}
+
+.field-val {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 7px 11px;
+  border-radius: 3px;
+  font-style: italic;
+}
+
+.field-val.new {
+  color: rgba(255,255,255,0.9);
+  background: rgba(232,130,154,0.07);
+  border-color: rgba(232,130,154,0.2);
+  font-style: normal;
+}
+
+.field-val.empty {
+  color: rgba(255,255,255,0.2);
+  font-size: 12px;
+}
+
+.variations { display: flex; flex-direction: column; gap: 5px; }
+
+.char-count {
+  float: right;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-box">
+      <div class="logo-the">the</div>
+      <div class="logo-nail">NAIL<br>ROOM</div>
+    </div>
+    <div class="logo-meta">
+      <div class="logo-title">Ad Intelligence</div>
+      <div class="logo-sub">META ADS PLATFORM</div>
+    </div>
+  </div>
+
+  <div class="step-bar">
+    <div class="step-item active" id="step1-ind">
+      <div class="step-num">1</div>
+      <div class="step-label">METRICS</div>
+    </div>
+    <div class="step-div"></div>
+    <div class="step-item" id="step2-ind">
+      <div class="step-num">2</div>
+      <div class="step-label">SZÖVEGEK</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ UPLOAD ══ -->
+  <div class="screen active" id="screen-upload">
+    <div class="upload-hero">
+      <div class="eyebrow">INDÍTSD AZ ELEMZÉST</div>
+      <h1 class="upload-title">Meta hirdetés<br><em>intelligencia</em></h1>
+      <p class="upload-sub">Töltsd fel a Meta Ads Manager exportját – az AI két lépésben elemzi a teljesítményt és megírja az új szövegeket.</p>
+
+      <div class="dropzone" id="dropzone">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput" onchange="handleFile(event)">
+        <div class="dz-icon">📊</div>
+        <div class="dz-title">Húzd ide az xlsx fájlt</div>
+        <div class="dz-hint">META ADS MANAGER EXPORT · XLSX / CSV</div>
+      </div>
+
+      <div class="api-row">
+        <input type="password" class="api-input" id="apiKey" placeholder="Anthropic API kulcs  ·  sk-ant-api...">
+      </div>
+      <div class="api-note">Az API kulcsot nem tároljuk. <a href="https://console.anthropic.com" target="_blank">Szerezd meg itt →</a></div>
+    </div>
+  </div>
+
+  <!-- ══ METRICS ══ -->
+  <div class="screen" id="screen-metrics">
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div class="table-title">Hirdetések teljesítménye</div>
+        <button class="btn btn-ghost" onclick="resetAll()" style="padding:8px 16px;font-size:10px">← Új fájl</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>HIRDETÉS</th><th>AD SET</th><th>STÁTUSZ</th>
+            <th>CTR</th><th>CPC ($)</th><th>ELKÖLTVE ($)</th>
+            <th>KONVERZIÓ</th><th>FREQ.</th><th>ÉRTÉKELÉS</th>
+          </tr>
+        </thead>
+        <tbody id="ads-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-card-top">
+        <div>
+          <div class="ai-card-title">AI <span>Metrics</span> Elemzés</div>
+          <div class="ai-sub">MAGYARUL · TELJESÍTMÉNY AUDIT</div>
+        </div>
+        <button class="btn btn-pink" onclick="runMetricsAI()" id="btn-metrics-ai">▶ Elemzés indítása</button>
+      </div>
+      <div class="ai-body" id="metrics-ai-body">
+        <div class="ai-placeholder">Kattints az elemzés indítására – az AI megmondja mi működik, mit állíts le és hol növelj büdzsét.</div>
+      </div>
+    </div>
+
+    <div class="proceed-wrap">
+      <button class="btn btn-pink" onclick="goToStep2()" style="font-size:12px;padding:15px 40px;letter-spacing:2px">
+        2. SZINT: SZÖVEGEK ELEMZÉSE →
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ COPY ══ -->
+  <div class="screen" id="screen-copy">
+    <div class="copy-top">
+      <div class="copy-title">Szöveg elemzés<br>& <span>új variációk</span></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <button class="back-btn" onclick="goBack()">← Vissza a metrikákhoz</button>
+        <button class="btn btn-pink" onclick="runCopyAI()" id="btn-copy-ai">✍️ Szövegek generálása</button>
+      </div>
+    </div>
+    <div class="copy-grid" id="copy-grid">
+      <div style="text-align:center;padding:60px;font-style:italic;font-size:18px;color:rgba(255,255,255,0.2)">
+        Kattints a "Szövegek generálása" gombra a kezdéshez
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let ads = [];
+
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', ()  => dz.classList.remove('over'));
+dz.addEventListener('drop',      e  => { e.preventDefault(); dz.classList.remove('over'); processFile(e.dataTransfer.files[0]); });
+
+function handleFile(e) { processFile(e.target.files[0]); }
+
+function processFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(e.target.result, { type: 'binary' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const raw = XLSX.utils.sheet_to_json(ws, { defval: null });
+    ads = raw.map(r => ({
+      name:        r['Ad name'] || '',
+      adset:       r['Ad set name'] || '',
+      delivery:    r['Ad delivery'] || '',
+      ctr:         parseFloat(r['CTR (link click-through rate)']) || 0,
+      cpc:         parseFloat(r['CPC (cost per link click) (USD)']) || 0,
+      spent:       parseFloat(r['Amount spent (USD)']) || 0,
+      conversions: r['Results'] || 0,
+      frequency:   parseFloat(r['Frequency']) || 0,
+    })).filter(a => a.name);
+    showMetrics();
+  };
+  reader.readAsBinaryString(file);
+}
+
+function score(ad) {
+  if (ad.ctr > 10 && Number(ad.conversions) > 0) return 'good';
+  if (ad.ctr < 2   || (ad.spent > 20 && Number(ad.conversions) === 0)) return 'bad';
+  return 'warn';
+}
+
+function showMetrics() {
+  show('screen-metrics'); setStep(1);
+  const totalSpent = ads.reduce((s,a) => s+a.spent, 0);
+  const totalConv  = ads.reduce((s,a) => s+(Number(a.conversions)||0), 0);
+  const ctrArr = ads.filter(a => a.ctr > 0);
+  const avgCtr = ctrArr.length ? ctrArr.reduce((s,a)=>s+a.ctr,0)/ctrArr.length : 0;
+  const active = ads.filter(a => a.delivery==='active').length;
+  const weak   = ads.filter(a => score(a)==='bad').length;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat"><div class="stat-val">$${totalSpent.toFixed(0)}</div><div class="stat-lbl">ELKÖLTVE</div></div>
+    <div class="stat"><div class="stat-val">${totalConv}</div><div class="stat-lbl">KONVERZIÓ</div></div>
+    <div class="stat"><div class="stat-val">${avgCtr.toFixed(1)}%</div><div class="stat-lbl">ÁTL. CTR</div></div>
+    <div class="stat"><div class="stat-val">${active}/${ads.length}</div><div class="stat-lbl">AKTÍV</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--red)">${weak}</div><div class="stat-lbl">GYENGE</div></div>
+  `;
+
+  const maxCtr = Math.max(...ads.map(a=>a.ctr), 1);
+  document.getElementById('ads-tbody').innerHTML = ads.map(ad => {
+    const s = score(ad);
+    const label = s==='good'?'Kiváló': s==='warn'?'Közepes':'Gyenge';
+    const bw = Math.round((ad.ctr/maxCtr)*54);
+    return `<tr>
+      <td><strong>${ad.name}</strong></td>
+      <td style="opacity:.6;font-size:12px">${ad.adset}</td>
+      <td><span class="badge ${ad.delivery==='active'?'b-active':'b-paused'}">${ad.delivery==='active'?'AKTÍV':'SZÜNET'}</span></td>
+      <td><div class="ctr-wrap"><div class="ctr-bg"><div class="ctr-fill" style="width:${bw}px"></div></div>${ad.ctr.toFixed(2)}%</div></td>
+      <td>$${ad.cpc.toFixed(3)}</td>
+      <td>$${ad.spent.toFixed(2)}</td>
+      <td>${ad.conversions||'–'}</td>
+      <td>${ad.frequency.toFixed(2)}</td>
+      <td><span class="dot dot-${s}"></span>${label}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function runMetricsAI() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) { alert('Add meg az Anthropic API kulcsodat!'); return; }
+
+  const body = document.getElementById('metrics-ai-body');
+  const btn  = document.getElementById('btn-metrics-ai');
+  body.innerHTML = `<div class="loading"><div class="spin"></div>AI elemzi a hirdetéseket...</div>`;
+  btn.disabled = true;
+
+  const summary = ads.map(a =>
+    `• ${a.name} | ${a.adset} | ${a.delivery==='active'?'AKTÍV':'SZÜNET'} | CTR: ${a.ctr.toFixed(2)}% | CPC: $${a.cpc.toFixed(3)} | Elköltve: $${a.spent.toFixed(2)} | Konv.: ${a.conversions||0} | Freq: ${a.frequency.toFixed(2)}`
+  ).join('\n');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 1200,
+        messages: [{ role:'user', content:`Te egy Meta Ads szakértő vagy. A Nail Room egy prémium köröm szalon Bali-ban, célközönsége turisták és expatok.
+
+Hirdetések adatai:
+${summary}
+
+Elemezd MAGYARUL:
+1. 🏆 TOP teljesítők – miért működnek?
+2. ⚠️ Gyenge hirdetések – konkrétan mi a probléma?
+3. 💸 Büdzsé javaslat – mit állíts le, hova tegyél több pénzt?
+4. ✅ 3 azonnali teendő
+
+Legyél konkrét, használj számokat, max 280 szó.` }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.find(b=>b.type==='text')?.text || 'Hiba.';
+    body.innerHTML = `<div class="ai-text">${esc(text)}</div>`;
+  } catch(err) {
+    body.innerHTML = `<div class="ai-text" style="color:var(--red)">Hiba: ${err.message}</div>`;
+  }
+  btn.disabled = false;
+}
+
+function goToStep2() {
+  show('screen-copy'); setStep(2);
+  const weak = ads.filter(a => score(a) !== 'good');
+  if (!weak.length) {
+    document.getElementById('copy-grid').innerHTML = `<div style="text-align:center;padding:48px;font-style:italic;font-size:18px;color:var(--green)">🎉 Minden hirdetés jól teljesít!</div>`;
+    return;
+  }
+  document.getElementById('copy-grid').innerHTML = weak.map(ad => `
+    <div class="copy-card" id="card-${cid(ad.name)}">
+      <div class="copy-card-head">
+        <div class="copy-card-name">${ad.name}</div>
+        <div class="copy-card-meta">${ad.adset} · CTR ${ad.ctr.toFixed(2)}% · $${ad.spent.toFixed(2)} elköltve</div>
+      </div>
+      <div class="copy-cols">
+        <div class="copy-col">
+          <div class="col-label">❌ JELENLEGI HELYZET</div>
+          <div class="field">
+            <div class="field-type">HEADLINE</div>
+            <div class="field-val empty">Nincs adat a Meta exportban</div>
+          </div>
+          <div class="field">
+            <div class="field-type">DESCRIPTION</div>
+            <div class="field-val empty">Nincs adat a Meta exportban</div>
+          </div>
+          <div class="field">
+            <div class="field-type">MIÉRT NEM MŰKÖDIK?</div>
+            <div class="field-val empty" id="why-${cid(ad.name)}">Generálás után jelenik meg</div>
+          </div>
+        </div>
+        <div class="copy-col">
+          <div class="col-label">✅ ÚJ JAVASLATOK (ANGOL)</div>
+          <div class="field">
+            <div class="field-type">ÚJ HEADLINE VARIÁCIÓK · MAX 30 KAR.</div>
+            <div class="variations" id="hl-${cid(ad.name)}">
+              <div class="field-val empty">Generálás folyamatban...</div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:8px">
+            <div class="field-type">ÚJ DESCRIPTION VARIÁCIÓK · MAX 90 KAR.</div>
+            <div class="variations" id="desc-${cid(ad.name)}">
+              <div class="field-val empty">Generálás folyamatban...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function runCopyAI() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) { alert('Add meg az Anthropic API kulcsodat!'); return; }
+
+  const weak = ads.filter(a => score(a) !== 'good');
+  if (!weak.length) return;
+
+  const btn = document.getElementById('btn-copy-ai');
+  btn.disabled = true; btn.textContent = '⏳ Generálás...';
+
+  const summary = weak.map(a =>
+    `AD: "${a.name}" | AdSet: ${a.adset} | CTR: ${a.ctr.toFixed(2)}% | CPC: $${a.cpc.toFixed(3)} | Spent: $${a.spent.toFixed(2)} | Conv: ${a.conversions||0} | Freq: ${a.frequency.toFixed(2)}`
+  ).join('\n');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+        messages: [{ role:'user', content:`You are a Meta Ads copywriter for The Nail Room Bali, a premium nail salon targeting tourists and expats in Bali.
+
+Underperforming ads:
+${summary}
+
+Return ONLY valid JSON (no markdown, no explanation):
+[
+  {
+    "name": "exact ad name",
+    "why": "1-2 sentences in Hungarian: why it underperforms",
+    "headlines": ["H1 max 30 chars", "H2 max 30 chars", "H3 max 30 chars"],
+    "descriptions": ["D1 max 90 chars", "D2 max 90 chars", "D3 max 90 chars"]
+  }
+]
+
+Headlines & descriptions: English only. Tone: premium, tropical, aspirational. Focus on luxury experience, Bali lifestyle.` }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.find(b=>b.type==='text')?.text || '[]';
+    let parsed;
+    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch { document.getElementById('copy-grid').innerHTML += `<div class="ai-card"><div class="ai-text">${esc(raw)}</div></div>`; return; }
+
+    parsed.forEach(item => {
+      const id = cid(item.name);
+      const whyEl  = document.getElementById(`why-${id}`);
+      const hlEl   = document.getElementById(`hl-${id}`);
+      const descEl = document.getElementById(`desc-${id}`);
+      if (whyEl)  { whyEl.textContent = item.why; whyEl.classList.remove('empty'); }
+      if (hlEl)   hlEl.innerHTML   = item.headlines.map(h    => `<div class="field-val new">${h}<span class="char-count">${h.length}/30</span></div>`).join('');
+      if (descEl) descEl.innerHTML = item.descriptions.map(d => `<div class="field-val new">${d}<span class="char-count">${d.length}/90</span></div>`).join('');
+    });
+  } catch(err) { alert('Hiba: ' + err.message); }
+
+  btn.disabled = false; btn.textContent = '✍️ Újra generálni';
+}
+
+function goBack()   { show('screen-metrics'); setStep(1); }
+function resetAll() {
+  ads = [];
+  document.getElementById('fileInput').value = '';
+  document.getElementById('metrics-ai-body').innerHTML = `<div class="ai-placeholder">Kattints az elemzés indítására...</div>`;
+  show('screen-upload'); setStep(0);
+}
+
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function setStep(n) {
+  const s1=document.getElementById('step1-ind'), s2=document.getElementById('step2-ind');
+  s1.className='step-item'+(n===1?' active':n>1?' done':'');
+  s2.className='step-item'+(n===2?' active':'');
+}
+function cid(name) { return name.replace(/[^a-z0-9]/gi,'_'); }
+function esc(t)    { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+</script>
+</body>
+</html>
