@@ -3,613 +3,319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Nail Room – Ad Intelligence</title>
+<title>The Nail Room – Meta Ads Workflow</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Jost:wght@300;400;500;600&display=swap');
 
 :root {
-  --black:   #0f0d0d;
-  --black2:  #1a1718;
-  --black3:  #242022;
-  --pink:    #e8829a;
-  --pink2:   #f0a0b4;
-  --pink3:   #fce8ee;
-  --white:   #ffffff;
-  --offwhite:#f7f3f4;
-  --muted:   rgba(255,255,255,0.45);
-  --border:  rgba(232,130,154,0.2);
-  --green:   #5aad7a;
-  --red:     #e07070;
-  --gold:    #c9a84c;
+  --black:  #0e0c0c;
+  --black2: #181515;
+  --black3: #221e1e;
+  --black4: #2c2727;
+  --pink:   #e8829a;
+  --pink2:  #f0a0b4;
+  --pink3:  #fce8ee;
+  --white:  #ffffff;
+  --cream:  #f7f2f3;
+  --muted:  rgba(255,255,255,0.42);
+  --border: rgba(232,130,154,0.18);
+  --green:  #5aad7a;
+  --red:    #e07070;
+  --gold:   #c9a84c;
+  --blue:   #6a9fd8;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--black);
-  color: var(--white);
-  font-family: 'Libre Baskerville', serif;
-  min-height: 100vh;
-}
+body { background:var(--black); color:var(--white); font-family:'Jost',sans-serif; font-weight:300; min-height:100vh; }
 
 /* ── HEADER ── */
 .header {
   background: var(--black2);
   border-bottom: 1px solid var(--border);
-  padding: 0 40px;
-  height: 68px;
+  padding: 0 36px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top:0; z-index:100;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+.logo { display:flex; align-items:center; gap:12px; }
 
 .logo-box {
   background: var(--black);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 6px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
+  border-radius: 3px;
+  padding: 5px 9px;
+  line-height:1;
+  text-align:center;
 }
 
-.logo-the {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  color: var(--white);
-  letter-spacing: 1px;
-  margin-bottom: 2px;
+.logo-the { font-family:'DM Mono',monospace; font-size:7px; color:var(--white); letter-spacing:1px; margin-bottom:2px; }
+.logo-nail { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--pink); line-height:1.15; }
+
+.logo-text { display:flex; flex-direction:column; }
+.logo-title { font-family:'Libre Baskerville',serif; font-size:14px; color:var(--white); }
+.logo-sub { font-family:'DM Mono',monospace; font-size:8px; color:var(--pink); letter-spacing:2px; opacity:.6; margin-top:2px; }
+
+/* Step indicator */
+.steps-header {
+  display:flex; align-items:center; gap:0;
 }
 
-.logo-nail {
-  font-family: 'Libre Baskerville', serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--pink);
-  letter-spacing: 1px;
-  line-height: 1.1;
+.sh-item {
+  display:flex; align-items:center; gap:8px;
+  padding: 0 14px;
+  opacity:.3; transition:opacity .3s;
 }
+.sh-item.active { opacity:1; }
+.sh-item.done { opacity:.55; }
 
-.logo-meta {
-  display: flex;
-  flex-direction: column;
+.sh-num {
+  width:22px; height:22px; border-radius:50%;
+  border:1.5px solid var(--pink);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'DM Mono',monospace; font-size:9px; color:var(--pink);
 }
+.sh-item.active .sh-num { background:var(--pink); color:var(--black); border-color:var(--pink); }
+.sh-item.done .sh-num { background:var(--green); border-color:var(--green); color:var(--black); }
 
-.logo-title {
-  font-family: 'Libre Baskerville', serif;
-  font-size: 15px;
-  color: var(--white);
-  letter-spacing: 0.5px;
-}
-
-.logo-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--pink);
-  letter-spacing: 2px;
-  opacity: 0.7;
-  margin-top: 2px;
-}
-
-/* ── STEP BAR ── */
-.step-bar {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.step-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 0 18px;
-  opacity: 0.35;
-  transition: opacity 0.3s;
-}
-
-.step-item.active { opacity: 1; }
-.step-item.done   { opacity: 0.6; }
-
-.step-num {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid var(--pink);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--pink);
-}
-
-.step-item.active .step-num {
-  background: var(--pink);
-  color: var(--black);
-  border-color: var(--pink);
-}
-
-.step-item.done .step-num {
-  background: var(--green);
-  border-color: var(--green);
-  color: var(--black);
-}
-
-.step-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--white);
-  letter-spacing: 2px;
-}
-
-.step-div {
-  width: 20px; height: 1px;
-  background: var(--border);
-}
+.sh-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--white); letter-spacing:1.5px; white-space:nowrap; }
+.sh-div { width:16px; height:1px; background:var(--border); }
 
 /* ── MAIN ── */
-.main {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 48px 24px 80px;
+.main { max-width:1100px; margin:0 auto; padding:40px 24px 80px; }
+
+.screen { display:none; }
+.screen.active { display:block; animation:fadeIn .4s ease; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── UPLOAD SCREEN ── */
+.upload-intro { text-align:center; max-width:560px; margin:0 auto 48px; }
+
+.eyebrow { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--pink); margin-bottom:16px; }
+
+.upload-title { font-family:'Libre Baskerville',serif; font-size:44px; line-height:1.1; margin-bottom:10px; }
+.upload-title em { color:var(--pink); font-style:italic; font-weight:400; }
+
+.upload-sub { font-size:14px; color:var(--muted); line-height:1.7; font-style:italic; }
+
+/* Upload grid */
+.upload-grid {
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  gap:16px;
+  margin-bottom:32px;
 }
 
-.screen { display: none; }
-.screen.active { display: block; animation: fadeIn 0.4s ease; }
-
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(10px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ── UPLOAD ── */
-.upload-hero {
-  max-width: 540px;
-  margin: 56px auto 0;
-  text-align: center;
-}
-
-.eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: var(--pink);
-  margin-bottom: 18px;
-}
-
-.upload-title {
-  font-size: 46px;
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 8px;
-  color: var(--white);
-}
-
-.upload-title em {
-  color: var(--pink);
-  font-style: italic;
-  font-weight: 400;
-}
-
-.upload-sub {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 36px;
-  font-style: italic;
-}
-
-.dropzone {
-  border: 1.5px dashed rgba(232,130,154,0.4);
-  border-radius: 8px;
-  padding: 52px 40px;
+.upload-card {
   background: var(--black2);
-  cursor: pointer;
-  transition: all 0.25s;
-  position: relative;
+  border: 1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  transition: border-color .2s;
 }
 
-.dropzone:hover, .dropzone.over {
-  border-color: var(--pink);
+.upload-card.filled { border-color: var(--green); }
+
+.uc-head {
+  padding:14px 18px;
   background: var(--black3);
-  box-shadow: 0 0 40px rgba(232,130,154,0.08);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
 }
 
-.dropzone input {
-  position: absolute; inset: 0;
-  opacity: 0; cursor: pointer;
-  width: 100%; height: 100%;
+.uc-num {
+  font-family:'DM Mono',monospace; font-size:9px;
+  color:var(--pink); letter-spacing:2px;
 }
 
-.dz-icon { font-size: 34px; margin-bottom: 14px; }
+.uc-check { color:var(--green); font-size:14px; display:none; }
+.upload-card.filled .uc-check { display:block; }
 
-.dz-title {
-  font-size: 20px;
-  color: var(--white);
-  margin-bottom: 6px;
-  font-style: italic;
+.uc-title { font-family:'Libre Baskerville',serif; font-size:16px; font-style:italic; padding:14px 18px 4px; }
+
+.uc-desc { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); padding:0 18px 14px; letter-spacing:.5px; line-height:1.6; }
+
+.uc-drop {
+  margin:0 18px 18px;
+  border:1px dashed rgba(232,130,154,.3);
+  border-radius:5px;
+  padding:18px;
+  text-align:center;
+  cursor:pointer;
+  position:relative;
+  transition:all .2s;
+  background: rgba(255,255,255,.02);
 }
 
-.dz-hint {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--pink);
-  letter-spacing: 1px;
-  opacity: 0.7;
+.uc-drop:hover { border-color:var(--pink); background:rgba(232,130,154,.04); }
+.upload-card.filled .uc-drop { border-color:rgba(90,173,122,.4); background:rgba(90,173,122,.04); }
+
+.uc-drop input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
+
+.uc-drop-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; }
+.upload-card.filled .uc-drop-label { color:var(--green); }
+
+.uc-filename { font-family:'DM Mono',monospace; font-size:10px; color:var(--green); margin-top:4px; display:none; }
+.upload-card.filled .uc-filename { display:block; }
+
+/* Proceed */
+.proceed-section { text-align:center; }
+
+.btn {
+  font-family:'DM Mono',monospace; font-size:11px;
+  letter-spacing:1.5px; padding:13px 28px;
+  border-radius:4px; border:none; cursor:pointer;
+  transition:all .2s;
 }
 
-.api-row {
-  margin-top: 16px;
-  display: flex;
-  gap: 0;
+.btn-pink { background:var(--pink); color:var(--black); font-weight:500; }
+.btn-pink:hover { background:var(--pink2); transform:translateY(-1px); box-shadow:0 6px 20px rgba(232,130,154,.25); }
+.btn-pink:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.btn-ghost { background:transparent; color:var(--pink); border:1px solid var(--border); }
+.btn-ghost:hover { border-color:var(--pink); }
+
+.upload-note { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:12px; letter-spacing:.5px; }
+
+/* ── ANALYSIS SCREEN ── */
+.analysis-top {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom:32px; gap:16px;
 }
 
-.api-input {
-  flex: 1;
-  padding: 11px 16px;
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--white);
-  outline: none;
-  transition: border-color 0.2s;
+.analysis-title { font-family:'Libre Baskerville',serif; font-size:30px; font-style:italic; }
+.analysis-title span { color:var(--pink); }
+
+/* Summary cards */
+.summary-grid {
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:12px; margin-bottom:28px;
 }
 
-.api-input:focus { border-color: var(--pink); }
-.api-input::placeholder { color: rgba(255,255,255,0.2); }
-
-.api-note {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: rgba(255,255,255,0.25);
-  margin-top: 8px;
-  text-align: left;
-  letter-spacing: 0.3px;
+.sum-card {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:6px; padding:18px 16px;
 }
 
-.api-note a { color: var(--pink); }
+.sum-val { font-family:'Libre Baskerville',serif; font-size:26px; margin-bottom:4px; }
+.sum-lbl { font-family:'DM Mono',monospace; font-size:9px; color:var(--pink); letter-spacing:1.5px; opacity:.7; }
 
-/* ── STATS ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(5,1fr);
-  gap: 12px;
-  margin-bottom: 28px;
-}
+/* Data tabs */
+.data-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:24px; }
 
-.stat {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 20px 18px;
+.dtab {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px;
+  padding:10px 18px; color:var(--muted); cursor:pointer;
+  border-bottom:2px solid transparent; transition:all .2s;
+  background:none; border-top:none; border-left:none; border-right:none;
 }
+.dtab:hover { color:var(--pink); }
+.dtab.active { color:var(--pink); border-bottom-color:var(--pink); }
 
-.stat-val {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 5px;
-}
+.dtab-content { display:none; }
+.dtab-content.active { display:block; animation:fadeIn .3s ease; }
 
-.stat-lbl {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--pink);
-  letter-spacing: 2px;
-  opacity: 0.7;
-}
+/* Table */
+.table-wrap { background:var(--black2); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:24px; }
 
-/* ── TABLE ── */
-.table-wrap {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-
-.table-head {
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.table-title {
-  font-size: 20px;
-  font-style: italic;
-  color: var(--white);
-}
+.tw-head { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.tw-title { font-family:'Libre Baskerville',serif; font-size:17px; font-style:italic; }
 
 table { width:100%; border-collapse:collapse; }
+th { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.2px; color:var(--pink); text-align:left; padding:9px 14px; background:var(--black3); border-bottom:1px solid var(--border); opacity:.8; }
+td { padding:11px 14px; border-bottom:1px solid rgba(232,130,154,.07); font-size:13px; color:rgba(255,255,255,.82); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--black3); }
 
-th {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  color: var(--pink);
-  text-align: left;
-  padding: 10px 16px;
-  background: var(--black3);
-  border-bottom: 1px solid var(--border);
-  opacity: 0.8;
+.badge { font-family:'DM Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; letter-spacing:1px; }
+.b-active { background:rgba(90,173,122,.12); color:var(--green); border:1px solid rgba(90,173,122,.3); }
+.b-paused { background:rgba(224,112,112,.1); color:var(--red); border:1px solid rgba(224,112,112,.25); }
+
+.dot { width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px; }
+.dot-good{background:var(--green)} .dot-warn{background:var(--gold)} .dot-bad{background:var(--red)}
+
+.bar-wrap { display:flex;align-items:center;gap:7px; }
+.bar-bg { width:50px;height:3px;background:rgba(232,130,154,.15);border-radius:2px; }
+.bar-fill { height:3px;border-radius:2px;background:var(--pink); }
+
+/* ── PROMPT SCREEN ── */
+.prompt-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:28px; gap:16px; }
+.prompt-title { font-family:'Libre Baskerville',serif; font-size:30px; font-style:italic; }
+.prompt-title span { color:var(--pink); }
+
+.prompt-desc { font-size:14px; color:var(--muted); font-style:italic; line-height:1.7; margin-bottom:24px; max-width:640px; }
+
+.prompt-box {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; overflow:hidden; margin-bottom:20px;
 }
 
-td {
-  padding: 13px 16px;
-  border-bottom: 1px solid rgba(232,130,154,0.07);
-  font-size: 13px;
-  vertical-align: middle;
-  color: rgba(255,255,255,0.85);
+.pb-head {
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
 }
 
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--black3); }
+.pb-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--pink); }
 
-.badge {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  padding: 3px 8px;
-  border-radius: 2px;
-  letter-spacing: 1px;
+.pb-text {
+  padding:20px;
+  font-family:'DM Mono',monospace; font-size:12px;
+  line-height:1.8; color:rgba(255,255,255,.75);
+  white-space:pre-wrap;
+  max-height:400px; overflow-y:auto;
 }
 
-.b-active { background: rgba(90,173,122,0.12); color: var(--green); border: 1px solid rgba(90,173,122,0.3); }
-.b-paused { background: rgba(224,112,112,0.1); color: var(--red);   border: 1px solid rgba(224,112,112,0.25); }
+.pb-text::-webkit-scrollbar { width:4px; }
+.pb-text::-webkit-scrollbar-track { background:transparent; }
+.pb-text::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
-.dot { width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px; }
-.dot-good { background: var(--green); }
-.dot-warn { background: var(--gold); }
-.dot-bad  { background: var(--red); }
+.copy-btn {
+  font-family:'DM Mono',monospace; font-size:10px;
+  letter-spacing:1px; padding:7px 14px;
+  background:transparent; color:var(--pink);
+  border:1px solid var(--border); border-radius:3px;
+  cursor:pointer; transition:all .2s;
+}
+.copy-btn:hover { border-color:var(--pink); background:rgba(232,130,154,.06); }
+.copy-btn.copied { color:var(--green); border-color:var(--green); }
 
-.ctr-wrap { display:flex;align-items:center;gap:8px; }
-.ctr-bg   { width:56px;height:3px;background:rgba(232,130,154,0.15);border-radius:2px; }
-.ctr-fill { height:3px;border-radius:2px;background:var(--pink); }
-
-/* ── BUTTONS ── */
-.btn {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  padding: 12px 26px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
+.steps-guide {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; padding:24px;
 }
 
-.btn-pink {
-  background: var(--pink);
-  color: var(--black);
-  font-weight: 500;
+.sg-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--pink); margin-bottom:18px; }
+
+.sg-step {
+  display:flex; gap:14px; align-items:flex-start;
+  padding:12px 0; border-bottom:1px solid rgba(232,130,154,.08);
+}
+.sg-step:last-child { border-bottom:none; }
+
+.sg-num {
+  width:24px; height:24px; border-radius:50%;
+  background:var(--pink); color:var(--black);
+  font-family:'DM Mono',monospace; font-size:10px; font-weight:500;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; margin-top:1px;
 }
 
-.btn-pink:hover { background: var(--pink2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,130,154,0.3); }
-.btn-pink:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.sg-text { font-size:14px; line-height:1.6; color:rgba(255,255,255,.75); }
+.sg-text strong { color:var(--white); font-weight:500; }
+.sg-text a { color:var(--pink); text-decoration:none; }
+.sg-text a:hover { text-decoration:underline; }
 
-.btn-ghost {
-  background: transparent;
-  color: var(--pink);
-  border: 1px solid var(--border);
-}
+/* back nav */
+.back-btn { font-family:'DM Mono',monospace; font-size:10px; color:var(--pink); background:none; border:none; cursor:pointer; letter-spacing:1px; opacity:.65; transition:opacity .2s; }
+.back-btn:hover { opacity:1; }
 
-.btn-ghost:hover { border-color: var(--pink); }
-
-/* ── AI CARD ── */
-.ai-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 28px 32px;
-  margin-bottom: 28px;
-}
-
-.ai-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: 16px;
-}
-
-.ai-card-title {
-  font-size: 22px;
-  font-style: italic;
-  color: var(--white);
-}
-
-.ai-card-title span { color: var(--pink); }
-
-.ai-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--pink);
-  letter-spacing: 2px;
-  opacity: 0.5;
-  margin-top: 4px;
-}
-
-.ai-body { min-height: 60px; }
-
-.ai-placeholder {
-  font-size: 16px;
-  font-style: italic;
-  color: rgba(255,255,255,0.2);
-  padding: 10px 0;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--pink);
-  font-style: italic;
-  font-size: 16px;
-  opacity: 0.8;
-}
-
-.spin {
-  width: 18px;height:18px;
-  border: 2px solid rgba(232,130,154,0.2);
-  border-top-color: var(--pink);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.ai-text {
-  font-size: 15px;
-  line-height: 1.9;
-  color: rgba(255,255,255,0.8);
-  white-space: pre-wrap;
-  font-style: italic;
-}
-
-/* ── PROCEED ── */
-.proceed-wrap {
-  text-align: center;
-  padding: 8px 0;
-}
-
-/* ── COPY SCREEN ── */
-.copy-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  gap: 16px;
-}
-
-.copy-title {
-  font-size: 30px;
-  font-style: italic;
-  color: var(--white);
-}
-
-.copy-title span { color: var(--pink); }
-
-.back-btn {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--pink);
-  background: none;
-  border: none;
-  cursor: pointer;
-  letter-spacing: 1px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.back-btn:hover { opacity: 1; }
-
-.copy-grid { display: flex; flex-direction: column; gap: 20px; }
-
-.copy-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.copy-card-head {
-  padding: 15px 22px;
-  background: var(--black3);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.copy-card-name {
-  font-size: 16px;
-  font-style: italic;
-  color: var(--white);
-}
-
-.copy-card-meta {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--pink);
-  letter-spacing: 1px;
-  opacity: 0.6;
-}
-
-.copy-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.copy-col { padding: 20px 22px; }
-
-.copy-col:first-child { border-right: 1px solid var(--border); }
-
-.col-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 14px;
-}
-
-.copy-col:first-child .col-label { color: var(--red); }
-.copy-col:last-child  .col-label { color: var(--green); }
-
-.field { margin-bottom: 12px; }
-
-.field-type {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: var(--pink);
-  opacity: 0.6;
-  margin-bottom: 5px;
-}
-
-.field-val {
-  font-size: 13px;
-  line-height: 1.5;
-  color: rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  padding: 7px 11px;
-  border-radius: 3px;
-  font-style: italic;
-}
-
-.field-val.new {
-  color: rgba(255,255,255,0.9);
-  background: rgba(232,130,154,0.07);
-  border-color: rgba(232,130,154,0.2);
-  font-style: normal;
-}
-
-.field-val.empty {
-  color: rgba(255,255,255,0.2);
-  font-size: 12px;
-}
-
-.variations { display: flex; flex-direction: column; gap: 5px; }
-
-.char-count {
-  float: right;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--pink);
-  opacity: 0.5;
-}
+/* spin */
+.spin { width:16px;height:16px; border:2px solid rgba(232,130,154,.2); border-top-color:var(--pink); border-radius:50%; animation:spin .7s linear infinite; display:inline-block; vertical-align:middle; margin-right:8px; }
+@keyframes spin { to{transform:rotate(360deg)} }
 </style>
 </head>
 <body>
@@ -621,101 +327,200 @@ tr:hover td { background: var(--black3); }
       <div class="logo-the">the</div>
       <div class="logo-nail">NAIL<br>ROOM</div>
     </div>
-    <div class="logo-meta">
-      <div class="logo-title">Ad Intelligence</div>
-      <div class="logo-sub">META ADS PLATFORM</div>
+    <div class="logo-text">
+      <div class="logo-title">Meta Ads Workflow</div>
+      <div class="logo-sub">NAIL ROOM BALI · AD INTELLIGENCE</div>
     </div>
   </div>
 
-  <div class="step-bar">
-    <div class="step-item active" id="step1-ind">
-      <div class="step-num">1</div>
-      <div class="step-label">METRICS</div>
-    </div>
-    <div class="step-div"></div>
-    <div class="step-item" id="step2-ind">
-      <div class="step-num">2</div>
-      <div class="step-label">SZÖVEGEK</div>
-    </div>
+  <div class="steps-header">
+    <div class="sh-item active" id="sh1"><div class="sh-num">1</div><div class="sh-label">ADATOK</div></div>
+    <div class="sh-div"></div>
+    <div class="sh-item" id="sh2"><div class="sh-num">2</div><div class="sh-label">ELEMZÉS</div></div>
+    <div class="sh-div"></div>
+    <div class="sh-item" id="sh3"><div class="sh-num">3</div><div class="sh-label">PROMPT</div></div>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- ══ UPLOAD ══ -->
-  <div class="screen active" id="screen-upload">
-    <div class="upload-hero">
-      <div class="eyebrow">INDÍTSD AZ ELEMZÉST</div>
-      <h1 class="upload-title">Meta hirdetés<br><em>intelligencia</em></h1>
-      <p class="upload-sub">Töltsd fel a Meta Ads Manager exportját – az AI két lépésben elemzi a teljesítményt és megírja az új szövegeket.</p>
-
-      <div class="dropzone" id="dropzone">
-        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput" onchange="handleFile(event)">
-        <div class="dz-icon">📊</div>
-        <div class="dz-title">Húzd ide az xlsx fájlt</div>
-        <div class="dz-hint">META ADS MANAGER EXPORT · XLSX / CSV</div>
-      </div>
-
-      <div class="api-row">
-        <input type="password" class="api-input" id="apiKey" placeholder="Anthropic API kulcs  ·  sk-ant-api...">
-      </div>
-      <div class="api-note">Az API kulcsot nem tároljuk. <a href="https://console.anthropic.com" target="_blank">Szerezd meg itt →</a></div>
-    </div>
-  </div>
-
-  <!-- ══ METRICS ══ -->
-  <div class="screen" id="screen-metrics">
-    <div class="stats-grid" id="stats-grid"></div>
-
-    <div class="table-wrap">
-      <div class="table-head">
-        <div class="table-title">Hirdetések teljesítménye</div>
-        <button class="btn btn-ghost" onclick="resetAll()" style="padding:8px 16px;font-size:10px">← Új fájl</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>HIRDETÉS</th><th>AD SET</th><th>STÁTUSZ</th>
-            <th>CTR</th><th>CPC ($)</th><th>ELKÖLTVE ($)</th>
-            <th>KONVERZIÓ</th><th>FREQ.</th><th>ÉRTÉKELÉS</th>
-          </tr>
-        </thead>
-        <tbody id="ads-tbody"></tbody>
-      </table>
+  <!-- ══ SCREEN 1: UPLOAD ══ -->
+  <div class="screen active" id="s-upload">
+    <div class="upload-intro">
+      <div class="eyebrow">HETI WORKFLOW</div>
+      <h1 class="upload-title">Töltsd fel a<br><em>4 Meta riportot</em></h1>
+      <p class="upload-sub">Az AI elemzi a teljesítményt, szövegeket és kreatívokat – majd egy kész Claude promptot generál az optimalizáláshoz.</p>
     </div>
 
-    <div class="ai-card">
-      <div class="ai-card-top">
-        <div>
-          <div class="ai-card-title">AI <span>Metrics</span> Elemzés</div>
-          <div class="ai-sub">MAGYARUL · TELJESÍTMÉNY AUDIT</div>
+    <div class="upload-grid">
+
+      <div class="upload-card" id="card-1">
+        <div class="uc-head">
+          <span class="uc-num">RIPORT 01</span>
+          <span class="uc-check">✓</span>
         </div>
-        <button class="btn btn-pink" onclick="runMetricsAI()" id="btn-metrics-ai">▶ Elemzés indítása</button>
+        <div class="uc-title">Ad Teljesítmény</div>
+        <div class="uc-desc">Ad set + Ad szint · CTR, CPC, konverzió,<br>elköltött összeg, reach, frequency</div>
+        <div class="uc-drop">
+          <input type="file" accept=".xlsx,.xls,.csv" onchange="handleUpload(event,1)">
+          <div class="uc-drop-label" id="lbl-1">📊 xlsx / csv feltöltése</div>
+          <div class="uc-filename" id="fn-1"></div>
+        </div>
       </div>
-      <div class="ai-body" id="metrics-ai-body">
-        <div class="ai-placeholder">Kattints az elemzés indítására – az AI megmondja mi működik, mit állíts le és hol növelj büdzsét.</div>
+
+      <div class="upload-card" id="card-2">
+        <div class="uc-head">
+          <span class="uc-num">RIPORT 02</span>
+          <span class="uc-check">✓</span>
+        </div>
+        <div class="uc-title">Primary Text riport</div>
+        <div class="uc-desc">Dynamic Creative Asset: Text breakdown<br>Primary text szövegek + metrikák</div>
+        <div class="uc-drop">
+          <input type="file" accept=".xlsx,.xls,.csv" onchange="handleUpload(event,2)">
+          <div class="uc-drop-label" id="lbl-2">📝 xlsx / csv feltöltése</div>
+          <div class="uc-filename" id="fn-2"></div>
+        </div>
       </div>
+
+      <div class="upload-card" id="card-3">
+        <div class="uc-head">
+          <span class="uc-num">RIPORT 03</span>
+          <span class="uc-check">✓</span>
+        </div>
+        <div class="uc-title">Headline riport</div>
+        <div class="uc-desc">Dynamic Creative Asset: Headline breakdown<br>Headline szövegek + metrikák</div>
+        <div class="uc-drop">
+          <input type="file" accept=".xlsx,.xls,.csv" onchange="handleUpload(event,3)">
+          <div class="uc-drop-label" id="lbl-3">✍️ xlsx / csv feltöltése</div>
+          <div class="uc-filename" id="fn-3"></div>
+        </div>
+      </div>
+
+      <div class="upload-card" id="card-4">
+        <div class="uc-head">
+          <span class="uc-num">RIPORT 04</span>
+          <span class="uc-check">✓</span>
+        </div>
+        <div class="uc-title">Image & Video riport</div>
+        <div class="uc-desc">Dynamic Creative Asset: Image/video breakdown<br>Kreatív típus (foto/videó) + metrikák</div>
+        <div class="uc-drop">
+          <input type="file" accept=".xlsx,.xls,.csv" onchange="handleUpload(event,4)">
+          <div class="uc-drop-label" id="lbl-4">🎨 xlsx / csv feltöltése</div>
+          <div class="uc-filename" id="fn-4"></div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="proceed-wrap">
-      <button class="btn btn-pink" onclick="goToStep2()" style="font-size:12px;padding:15px 40px;letter-spacing:2px">
-        2. SZINT: SZÖVEGEK ELEMZÉSE →
+    <div class="proceed-section">
+      <button class="btn btn-pink" onclick="goAnalysis()" id="btn-proceed" disabled>
+        Elemzés megtekintése →
       </button>
+      <div class="upload-note">Legalább az 1. riport szükséges · A többi opcionális</div>
     </div>
   </div>
 
-  <!-- ══ COPY ══ -->
-  <div class="screen" id="screen-copy">
-    <div class="copy-top">
-      <div class="copy-title">Szöveg elemzés<br>& <span>új variációk</span></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-        <button class="back-btn" onclick="goBack()">← Vissza a metrikákhoz</button>
-        <button class="btn btn-pink" onclick="runCopyAI()" id="btn-copy-ai">✍️ Szövegek generálása</button>
+  <!-- ══ SCREEN 2: ANALYSIS ══ -->
+  <div class="screen" id="s-analysis">
+    <div class="analysis-top">
+      <div>
+        <div class="analysis-title">Adatok <span>áttekintése</span></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="back-btn" onclick="goScreen('s-upload',1)">← Új feltöltés</button>
+        <button class="btn btn-pink" onclick="goScreen('s-prompt',3)" style="padding:10px 22px;font-size:10px">Prompt generálása →</button>
       </div>
     </div>
-    <div class="copy-grid" id="copy-grid">
-      <div style="text-align:center;padding:60px;font-style:italic;font-size:18px;color:rgba(255,255,255,0.2)">
-        Kattints a "Szövegek generálása" gombra a kezdéshez
+
+    <div class="summary-grid" id="sum-grid"></div>
+
+    <div class="data-tabs">
+      <button class="dtab active" onclick="switchTab('t-perf',this)">Ad Teljesítmény</button>
+      <button class="dtab" onclick="switchTab('t-text',this)">Primary Text</button>
+      <button class="dtab" onclick="switchTab('t-headline',this)">Headline</button>
+      <button class="dtab" onclick="switchTab('t-creative',this)">Kreatív</button>
+    </div>
+
+    <div class="dtab-content active" id="t-perf">
+      <div class="table-wrap">
+        <div class="tw-head"><div class="tw-title">Ad szintű teljesítmény</div></div>
+        <table><thead><tr>
+          <th>AD NÉV</th><th>AD SET</th><th>STÁTUSZ</th>
+          <th>CTR</th><th>CPC ($)</th><th>ELKÖLTVE ($)</th>
+          <th>KONVERZIÓ</th><th>FREQ.</th><th>ÉRTÉKELÉS</th>
+        </tr></thead>
+        <tbody id="tbody-perf"></tbody></table>
+      </div>
+    </div>
+
+    <div class="dtab-content" id="t-text">
+      <div class="table-wrap">
+        <div class="tw-head"><div class="tw-title">Primary Text teljesítmény</div></div>
+        <table><thead><tr>
+          <th>PRIMARY TEXT</th><th>IMPRESSIONS</th><th>KATTINTÁS</th><th>CTR</th><th>ELKÖLTVE ($)</th><th>KONVERZIÓ</th>
+        </tr></thead>
+        <tbody id="tbody-text"></tbody></table>
+      </div>
+    </div>
+
+    <div class="dtab-content" id="t-headline">
+      <div class="table-wrap">
+        <div class="tw-head"><div class="tw-title">Headline teljesítmény</div></div>
+        <table><thead><tr>
+          <th>HEADLINE</th><th>IMPRESSIONS</th><th>KATTINTÁS</th><th>CTR</th><th>ELKÖLTVE ($)</th><th>KONVERZIÓ</th>
+        </tr></thead>
+        <tbody id="tbody-headline"></tbody></table>
+      </div>
+    </div>
+
+    <div class="dtab-content" id="t-creative">
+      <div class="table-wrap">
+        <div class="tw-head"><div class="tw-title">Kreatív típus teljesítmény</div></div>
+        <table><thead><tr>
+          <th>KREATÍV</th><th>IMPRESSIONS</th><th>KATTINTÁS</th><th>CTR</th><th>ELKÖLTVE ($)</th><th>KONVERZIÓ</th>
+        </tr></thead>
+        <tbody id="tbody-creative"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ SCREEN 3: PROMPT ══ -->
+  <div class="screen" id="s-prompt">
+    <div class="prompt-top">
+      <div>
+        <div class="prompt-title">Claude <span>Prompt</span></div>
+      </div>
+      <button class="back-btn" onclick="goScreen('s-analysis',2)">← Vissza az elemzéshez</button>
+    </div>
+
+    <p class="prompt-desc">Az alábbi promptot másold be a <strong style="color:var(--white)">claude.ai</strong>-ba. Tartalmazza az összes adatot és a business kontextust – Claude részletes elemzést és javaslatokat ad.</p>
+
+    <div class="prompt-box">
+      <div class="pb-head">
+        <div class="pb-title">KÉSZ PROMPT · MÁSOLÁSRA</div>
+        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">📋 Másolás</button>
+      </div>
+      <div class="pb-text" id="prompt-text">Generálás...</div>
+    </div>
+
+    <div class="steps-guide">
+      <div class="sg-title">HOGYAN HASZNÁLD</div>
+      <div class="sg-step">
+        <div class="sg-num">1</div>
+        <div class="sg-text">Kattints a <strong>"📋 Másolás"</strong> gombra fent – a teljes prompt a vágólapra kerül</div>
+      </div>
+      <div class="sg-step">
+        <div class="sg-num">2</div>
+        <div class="sg-text">Nyisd meg: <a href="https://claude.ai" target="_blank">claude.ai</a> → új chat → illeszd be a promptot (Ctrl+V)</div>
+      </div>
+      <div class="sg-step">
+        <div class="sg-num">3</div>
+        <div class="sg-text">Claude <strong>magyarul elemez</strong> és ad javaslatot: budget, kreatív, szöveg, célközönség</div>
+      </div>
+      <div class="sg-step">
+        <div class="sg-num">4</div>
+        <div class="sg-text">Ha többet szeretnél tudni, kérdezz rá Claude-nál – ismeri az összes adatodat</div>
       </div>
     </div>
   </div>
@@ -723,244 +528,287 @@ tr:hover td { background: var(--black3); }
 </div>
 
 <script>
-let ads = [];
+// ── STATE ──
+const data = { perf: null, text: null, headline: null, creative: null };
 
-const dz = document.getElementById('dropzone');
-dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('over'); });
-dz.addEventListener('dragleave', ()  => dz.classList.remove('over'));
-dz.addEventListener('drop',      e  => { e.preventDefault(); dz.classList.remove('over'); processFile(e.dataTransfer.files[0]); });
+const BRIEF = `
+BUSINESS BRIEF – THE NAIL ROOM BALI
+====================================
+Szalon neve: The Nail Room
+Weboldal: https://www.nailroombali.com
+Helyszín: Sanur, Bali, Indonesia
+Geotarget: Sanur és 5-8km-es körzet
+Célközönség: Külföldi turisták és expatok – angolul beszélnek
+Kizárt célközönség: Helyi indonézek, lokálisok
+Meta Ads havi büdzsé: $280 USD
+Átlagos foglalási érték (AOV): $36 USD
+Fő cél: Időpont foglalás (website schedule konverzió)
 
-function handleFile(e) { processFile(e.target.files[0]); }
+USP – Miért válasszák a Nail Room-ot:
+• 150+ Five-Star Google review Sanur-ban
+• Sterilizált eszközök minden ügyfelnek – hygiene fókusz
+• Russian manicure + BIAB specialista
+• 500+ professzionális szín
+• Teljesen angol nyelvű csapat
+• Online foglalás 24/7
+• Szolgáltatások: BIAB manicure, Gel pedicure, Soft Gel Extensions, Russian manicure
+`.trim();
 
-function processFile(file) {
+// ── FILE HANDLING ──
+function handleUpload(e, num) {
+  const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    const wb = XLSX.read(e.target.result, { type: 'binary' });
+  reader.onload = ev => {
+    const wb = XLSX.read(ev.target.result, { type:'binary' });
     const ws = wb.Sheets[wb.SheetNames[0]];
     const raw = XLSX.utils.sheet_to_json(ws, { defval: null });
-    ads = raw.map(r => ({
-      name:        r['Ad name'] || '',
-      adset:       r['Ad set name'] || '',
-      delivery:    r['Ad delivery'] || '',
-      ctr:         parseFloat(r['CTR (link click-through rate)']) || 0,
-      cpc:         parseFloat(r['CPC (cost per link click) (USD)']) || 0,
-      spent:       parseFloat(r['Amount spent (USD)']) || 0,
-      conversions: r['Results'] || 0,
-      frequency:   parseFloat(r['Frequency']) || 0,
-    })).filter(a => a.name);
-    showMetrics();
+
+    const key = ['perf','text','headline','creative'][num-1];
+    data[key] = raw;
+
+    document.getElementById(`card-${num}`).classList.add('filled');
+    document.getElementById(`fn-${num}`).textContent = file.name;
+    document.getElementById(`lbl-${num}`).textContent = '✓ Feltöltve';
+
+    // enable proceed if at least perf is loaded
+    if (data.perf) document.getElementById('btn-proceed').disabled = false;
   };
   reader.readAsBinaryString(file);
 }
 
-function score(ad) {
-  if (ad.ctr > 10 && Number(ad.conversions) > 0) return 'good';
-  if (ad.ctr < 2   || (ad.spent > 20 && Number(ad.conversions) === 0)) return 'bad';
-  return 'warn';
+// ── ANALYSIS ──
+function goAnalysis() {
+  buildSummary();
+  buildPerfTable();
+  buildTextTable();
+  buildHeadlineTable();
+  buildCreativeTable();
+  goScreen('s-analysis', 2);
 }
 
-function showMetrics() {
-  show('screen-metrics'); setStep(1);
-  const totalSpent = ads.reduce((s,a) => s+a.spent, 0);
-  const totalConv  = ads.reduce((s,a) => s+(Number(a.conversions)||0), 0);
-  const ctrArr = ads.filter(a => a.ctr > 0);
-  const avgCtr = ctrArr.length ? ctrArr.reduce((s,a)=>s+a.ctr,0)/ctrArr.length : 0;
-  const active = ads.filter(a => a.delivery==='active').length;
-  const weak   = ads.filter(a => score(a)==='bad').length;
+function buildSummary() {
+  const rows = data.perf || [];
+  const totalSpent = sum(rows, r => parseFloat(r['Amount spent (USD)'] || r['Amount Spent (USD)'] || 0));
+  const totalConv  = sum(rows, r => parseFloat(r['Results'] || 0));
+  const ctrRows = rows.filter(r => parseFloat(r['CTR (link click-through rate)'] || 0) > 0);
+  const avgCtr = ctrRows.length ? sum(ctrRows, r => parseFloat(r['CTR (link click-through rate)']||0)) / ctrRows.length : 0;
+  const active = rows.filter(r => (r['Ad delivery']||'').toLowerCase() === 'active').length;
+  const roas = totalSpent > 0 ? ((totalConv * 36) / totalSpent).toFixed(2) : '–';
 
-  document.getElementById('stats-grid').innerHTML = `
-    <div class="stat"><div class="stat-val">$${totalSpent.toFixed(0)}</div><div class="stat-lbl">ELKÖLTVE</div></div>
-    <div class="stat"><div class="stat-val">${totalConv}</div><div class="stat-lbl">KONVERZIÓ</div></div>
-    <div class="stat"><div class="stat-val">${avgCtr.toFixed(1)}%</div><div class="stat-lbl">ÁTL. CTR</div></div>
-    <div class="stat"><div class="stat-val">${active}/${ads.length}</div><div class="stat-lbl">AKTÍV</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--red)">${weak}</div><div class="stat-lbl">GYENGE</div></div>
+  document.getElementById('sum-grid').innerHTML = `
+    <div class="sum-card"><div class="sum-val">$${totalSpent.toFixed(0)}</div><div class="sum-lbl">ELKÖLTVE</div></div>
+    <div class="sum-card"><div class="sum-val">${totalConv}</div><div class="sum-lbl">KONVERZIÓ</div></div>
+    <div class="sum-card"><div class="sum-val">${avgCtr.toFixed(1)}%</div><div class="sum-lbl">ÁTL. CTR</div></div>
+    <div class="sum-card"><div class="sum-val">${active}/${rows.length}</div><div class="sum-lbl">AKTÍV AD</div></div>
+    <div class="sum-card"><div class="sum-val">${roas}x</div><div class="sum-lbl">EST. ROAS</div></div>
   `;
+}
 
-  const maxCtr = Math.max(...ads.map(a=>a.ctr), 1);
-  document.getElementById('ads-tbody').innerHTML = ads.map(ad => {
-    const s = score(ad);
-    const label = s==='good'?'Kiváló': s==='warn'?'Közepes':'Gyenge';
-    const bw = Math.round((ad.ctr/maxCtr)*54);
+function buildPerfTable() {
+  const rows = data.perf || [];
+  if (!rows.length) { document.getElementById('tbody-perf').innerHTML = `<tr><td colspan="9" style="text-align:center;opacity:.4;font-style:italic;padding:24px">Nincs adat feltöltve</td></tr>`; return; }
+  const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
+  document.getElementById('tbody-perf').innerHTML = rows.map(r => {
+    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
+    const cpc  = parseFloat(r['CPC (cost per link click) (USD)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const conv = parseFloat(r['Results']||0);
+    const freq = parseFloat(r['Frequency']||0);
+    const del  = (r['Ad delivery']||'').toLowerCase();
+    const s    = ctr>10&&conv>0?'good': ctr<2||(spent>20&&conv===0)?'bad':'warn';
+    const lbl  = s==='good'?'Kiváló':s==='warn'?'Közepes':'Gyenge';
+    const bw   = Math.round((ctr/maxCtr)*48);
     return `<tr>
-      <td><strong>${ad.name}</strong></td>
-      <td style="opacity:.6;font-size:12px">${ad.adset}</td>
-      <td><span class="badge ${ad.delivery==='active'?'b-active':'b-paused'}">${ad.delivery==='active'?'AKTÍV':'SZÜNET'}</span></td>
-      <td><div class="ctr-wrap"><div class="ctr-bg"><div class="ctr-fill" style="width:${bw}px"></div></div>${ad.ctr.toFixed(2)}%</div></td>
-      <td>$${ad.cpc.toFixed(3)}</td>
-      <td>$${ad.spent.toFixed(2)}</td>
-      <td>${ad.conversions||'–'}</td>
-      <td>${ad.frequency.toFixed(2)}</td>
-      <td><span class="dot dot-${s}"></span>${label}</td>
+      <td><strong style="font-size:13px">${r['Ad name']||'–'}</strong></td>
+      <td style="opacity:.6;font-size:12px">${r['Ad set name']||'–'}</td>
+      <td><span class="badge ${del==='active'?'b-active':'b-paused'}">${del==='active'?'AKTÍV':'SZÜNET'}</span></td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
+      <td>$${cpc.toFixed(3)}</td>
+      <td>$${spent.toFixed(2)}</td>
+      <td>${conv||'–'}</td>
+      <td>${freq.toFixed(2)}</td>
+      <td><span class="dot dot-${s}"></span>${lbl}</td>
     </tr>`;
   }).join('');
 }
 
-async function runMetricsAI() {
-  const key = document.getElementById('apiKey').value.trim();
-  if (!key) { alert('Add meg az Anthropic API kulcsodat!'); return; }
-
-  const body = document.getElementById('metrics-ai-body');
-  const btn  = document.getElementById('btn-metrics-ai');
-  body.innerHTML = `<div class="loading"><div class="spin"></div>AI elemzi a hirdetéseket...</div>`;
-  btn.disabled = true;
-
-  const summary = ads.map(a =>
-    `• ${a.name} | ${a.adset} | ${a.delivery==='active'?'AKTÍV':'SZÜNET'} | CTR: ${a.ctr.toFixed(2)}% | CPC: $${a.cpc.toFixed(3)} | Elköltve: $${a.spent.toFixed(2)} | Konv.: ${a.conversions||0} | Freq: ${a.frequency.toFixed(2)}`
-  ).join('\n');
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 1200,
-        messages: [{ role:'user', content:`Te egy Meta Ads szakértő vagy. A Nail Room egy prémium köröm szalon Bali-ban, célközönsége turisták és expatok.
-
-Hirdetések adatai:
-${summary}
-
-Elemezd MAGYARUL:
-1. 🏆 TOP teljesítők – miért működnek?
-2. ⚠️ Gyenge hirdetések – konkrétan mi a probléma?
-3. 💸 Büdzsé javaslat – mit állíts le, hova tegyél több pénzt?
-4. ✅ 3 azonnali teendő
-
-Legyél konkrét, használj számokat, max 280 szó.` }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content?.find(b=>b.type==='text')?.text || 'Hiba.';
-    body.innerHTML = `<div class="ai-text">${esc(text)}</div>`;
-  } catch(err) {
-    body.innerHTML = `<div class="ai-text" style="color:var(--red)">Hiba: ${err.message}</div>`;
-  }
-  btn.disabled = false;
+function buildTextTable() {
+  const rows = data.text || [];
+  if (!rows.length) { document.getElementById('tbody-text').innerHTML = emptyRow(6,'Nincs Text riport feltöltve'); return; }
+  const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
+  document.getElementById('tbody-text').innerHTML = rows.map(r => {
+    const text = r['Text'] || r['Body'] || r['Primary text'] || Object.values(r)[0] || '–';
+    const imp  = parseInt(r['Impressions']||0);
+    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const conv = r['Results']||'–';
+    const bw   = Math.round((ctr/maxCtr)*48);
+    return `<tr>
+      <td style="max-width:320px;font-size:12px;font-style:italic">${String(text).substring(0,120)}${String(text).length>120?'…':''}</td>
+      <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
+      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+    </tr>`;
+  }).join('');
 }
 
-function goToStep2() {
-  show('screen-copy'); setStep(2);
-  const weak = ads.filter(a => score(a) !== 'good');
-  if (!weak.length) {
-    document.getElementById('copy-grid').innerHTML = `<div style="text-align:center;padding:48px;font-style:italic;font-size:18px;color:var(--green)">🎉 Minden hirdetés jól teljesít!</div>`;
-    return;
-  }
-  document.getElementById('copy-grid').innerHTML = weak.map(ad => `
-    <div class="copy-card" id="card-${cid(ad.name)}">
-      <div class="copy-card-head">
-        <div class="copy-card-name">${ad.name}</div>
-        <div class="copy-card-meta">${ad.adset} · CTR ${ad.ctr.toFixed(2)}% · $${ad.spent.toFixed(2)} elköltve</div>
-      </div>
-      <div class="copy-cols">
-        <div class="copy-col">
-          <div class="col-label">❌ JELENLEGI HELYZET</div>
-          <div class="field">
-            <div class="field-type">HEADLINE</div>
-            <div class="field-val empty">Nincs adat a Meta exportban</div>
-          </div>
-          <div class="field">
-            <div class="field-type">DESCRIPTION</div>
-            <div class="field-val empty">Nincs adat a Meta exportban</div>
-          </div>
-          <div class="field">
-            <div class="field-type">MIÉRT NEM MŰKÖDIK?</div>
-            <div class="field-val empty" id="why-${cid(ad.name)}">Generálás után jelenik meg</div>
-          </div>
-        </div>
-        <div class="copy-col">
-          <div class="col-label">✅ ÚJ JAVASLATOK (ANGOL)</div>
-          <div class="field">
-            <div class="field-type">ÚJ HEADLINE VARIÁCIÓK · MAX 30 KAR.</div>
-            <div class="variations" id="hl-${cid(ad.name)}">
-              <div class="field-val empty">Generálás folyamatban...</div>
-            </div>
-          </div>
-          <div class="field" style="margin-top:8px">
-            <div class="field-type">ÚJ DESCRIPTION VARIÁCIÓK · MAX 90 KAR.</div>
-            <div class="variations" id="desc-${cid(ad.name)}">
-              <div class="field-val empty">Generálás folyamatban...</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
+function buildHeadlineTable() {
+  const rows = data.headline || [];
+  if (!rows.length) { document.getElementById('tbody-headline').innerHTML = emptyRow(6,'Nincs Headline riport feltöltve'); return; }
+  const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
+  document.getElementById('tbody-headline').innerHTML = rows.map(r => {
+    const hl   = r['Headline (ad settings)'] || r['Headline'] || Object.values(r)[0] || '–';
+    const imp  = parseInt(r['Impressions']||0);
+    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const conv = r['Results']||'–';
+    const bw   = Math.round((ctr/maxCtr)*48);
+    return `<tr>
+      <td style="font-size:13px"><strong>${hl}</strong></td>
+      <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
+      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+    </tr>`;
+  }).join('');
 }
 
-async function runCopyAI() {
-  const key = document.getElementById('apiKey').value.trim();
-  if (!key) { alert('Add meg az Anthropic API kulcsodat!'); return; }
-
-  const weak = ads.filter(a => score(a) !== 'good');
-  if (!weak.length) return;
-
-  const btn = document.getElementById('btn-copy-ai');
-  btn.disabled = true; btn.textContent = '⏳ Generálás...';
-
-  const summary = weak.map(a =>
-    `AD: "${a.name}" | AdSet: ${a.adset} | CTR: ${a.ctr.toFixed(2)}% | CPC: $${a.cpc.toFixed(3)} | Spent: $${a.spent.toFixed(2)} | Conv: ${a.conversions||0} | Freq: ${a.frequency.toFixed(2)}`
-  ).join('\n');
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-        messages: [{ role:'user', content:`You are a Meta Ads copywriter for The Nail Room Bali, a premium nail salon targeting tourists and expats in Bali.
-
-Underperforming ads:
-${summary}
-
-Return ONLY valid JSON (no markdown, no explanation):
-[
-  {
-    "name": "exact ad name",
-    "why": "1-2 sentences in Hungarian: why it underperforms",
-    "headlines": ["H1 max 30 chars", "H2 max 30 chars", "H3 max 30 chars"],
-    "descriptions": ["D1 max 90 chars", "D2 max 90 chars", "D3 max 90 chars"]
-  }
-]
-
-Headlines & descriptions: English only. Tone: premium, tropical, aspirational. Focus on luxury experience, Bali lifestyle.` }]
-      })
-    });
-    const data = await res.json();
-    const raw = data.content?.find(b=>b.type==='text')?.text || '[]';
-    let parsed;
-    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch { document.getElementById('copy-grid').innerHTML += `<div class="ai-card"><div class="ai-text">${esc(raw)}</div></div>`; return; }
-
-    parsed.forEach(item => {
-      const id = cid(item.name);
-      const whyEl  = document.getElementById(`why-${id}`);
-      const hlEl   = document.getElementById(`hl-${id}`);
-      const descEl = document.getElementById(`desc-${id}`);
-      if (whyEl)  { whyEl.textContent = item.why; whyEl.classList.remove('empty'); }
-      if (hlEl)   hlEl.innerHTML   = item.headlines.map(h    => `<div class="field-val new">${h}<span class="char-count">${h.length}/30</span></div>`).join('');
-      if (descEl) descEl.innerHTML = item.descriptions.map(d => `<div class="field-val new">${d}<span class="char-count">${d.length}/90</span></div>`).join('');
-    });
-  } catch(err) { alert('Hiba: ' + err.message); }
-
-  btn.disabled = false; btn.textContent = '✍️ Újra generálni';
+function buildCreativeTable() {
+  const rows = data.creative || [];
+  if (!rows.length) { document.getElementById('tbody-creative').innerHTML = emptyRow(6,'Nincs Kreatív riport feltöltve'); return; }
+  const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
+  document.getElementById('tbody-creative').innerHTML = rows.map(r => {
+    const name = r['Image, video and slideshow'] || r['Creative'] || Object.values(r)[0] || '–';
+    const imp  = parseInt(r['Impressions']||0);
+    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const conv = r['Results']||'–';
+    const bw   = Math.round((ctr/maxCtr)*48);
+    const isVideo = String(name).toLowerCase().includes('video');
+    return `<tr>
+      <td style="font-size:12px">${isVideo?'🎬':'📷'} ${String(name).substring(0,80)}</td>
+      <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
+      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+    </tr>`;
+  }).join('');
 }
 
-function goBack()   { show('screen-metrics'); setStep(1); }
-function resetAll() {
-  ads = [];
-  document.getElementById('fileInput').value = '';
-  document.getElementById('metrics-ai-body').innerHTML = `<div class="ai-placeholder">Kattints az elemzés indítására...</div>`;
-  show('screen-upload'); setStep(0);
+// ── PROMPT ──
+function goScreen(id, step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  setStep(step);
+  if (id === 's-prompt') buildPrompt();
 }
 
-function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function buildPrompt() {
+  const perf     = data.perf     ? formatTable(data.perf,     ['Ad name','Ad set name','Ad delivery','CTR (link click-through rate)','CPC (cost per link click) (USD)','Amount spent (USD)','Results','Frequency']) : 'Nem töltötték fel.';
+  const textData = data.text     ? formatTable(data.text,     ['Text','Body','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
+  const hlData   = data.headline ? formatTable(data.headline, ['Headline (ad settings)','Headline','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
+  const crData   = data.creative ? formatTable(data.creative, ['Image, video and slideshow','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
+
+  const prompt = `Te egy tapasztalt Meta Ads stratéga vagy, aki a The Nail Room Bali prémium körömszalon hirdetéseit optimalizálja. Elemezd az alábbi adatokat és adj konkrét, számokkal alátámasztott javaslatokat MAGYARUL.
+
+════════════════════════════════════
+${BRIEF}
+
+════════════════════════════════════
+1. AD TELJESÍTMÉNY (Ad set + Ad szint)
+════════════════════════════════════
+${perf}
+
+════════════════════════════════════
+2. PRIMARY TEXT TELJESÍTMÉNY
+════════════════════════════════════
+${textData}
+
+════════════════════════════════════
+3. HEADLINE TELJESÍTMÉNY
+════════════════════════════════════
+${hlData}
+
+════════════════════════════════════
+4. KREATÍV (FOTO vs VIDEÓ) TELJESÍTMÉNY
+════════════════════════════════════
+${crData}
+
+════════════════════════════════════
+ELEMZÉSI FELADAT
+════════════════════════════════════
+Kérlek elemezd az alábbi szempontok szerint, prioritás sorrendben:
+
+1. 💸 BUDGET OPTIMALIZÁLÁS
+   - Melyik Ad set-re / Ad-re érdemes többet költeni?
+   - Mit kell leállítani azonnal?
+   - Hogyan osszuk el a $280/hó büdzsét optimálisan?
+
+2. 🎨 KREATÍV JAVASLATOK
+   - Fotó vs videó: melyik teljesít jobban és miért?
+   - Melyik kreatív érdemel több budget-et?
+   - Mit kell lecserélni?
+
+3. ✍️ SZÖVEG OPTIMALIZÁLÁS
+   - Melyik headline konvertál legjobban?
+   - Melyik primary text működik?
+   - Adj 3 új headline javaslatot (max 30 karakter, angolul)
+   - Adj 2 új primary text javaslatot (angolul, prémium + hygiene fókusz)
+
+4. 🎯 CÉLKÖZÖNSÉG JAVASLATOK
+   - Van-e frequency probléma?
+   - Audience fáradás jelei?
+   - Javasolt célzás módosítások?
+
+5. 🏗️ KAMPÁNY STRUKTÚRA
+   - Az aktuális struktúra (Retarget schedule, Cold Broad) optimális-e?
+   - Van-e javasolt változtatás?
+
+Légy konkrét: használj számokat, százalékokat. Ne általánosíts. Az elemzés alapja kizárólag a fenti adatok legyenek.`;
+
+  document.getElementById('prompt-text').textContent = prompt;
+}
+
+function formatTable(rows, preferredKeys) {
+  if (!rows || !rows.length) return 'Nincs adat.';
+  const headers = Object.keys(rows[0]);
+  const useKeys = preferredKeys.filter(k => headers.includes(k));
+  const finalKeys = useKeys.length >= 2 ? useKeys : headers.slice(0, 8);
+
+  const lines = rows.slice(0, 40).map(r =>
+    finalKeys.map(k => `${k}: ${r[k] ?? '–'}`).join(' | ')
+  );
+  return lines.join('\n');
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Másolva!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Másolás'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function switchTab(id, el) {
+  document.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dtab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
 function setStep(n) {
-  const s1=document.getElementById('step1-ind'), s2=document.getElementById('step2-ind');
-  s1.className='step-item'+(n===1?' active':n>1?' done':'');
-  s2.className='step-item'+(n===2?' active':'');
+  ['sh1','sh2','sh3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'sh-item' + (i+1===n?' active': i+1<n?' done':'');
+  });
 }
-function cid(name) { return name.replace(/[^a-z0-9]/gi,'_'); }
-function esc(t)    { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+function sum(arr, fn) { return arr.reduce((s,r) => s + (fn(r)||0), 0); }
+function emptyRow(cols, msg) { return `<tr><td colspan="${cols}" style="text-align:center;opacity:.35;font-style:italic;padding:24px">${msg}</td></tr>`; }
 </script>
 </body>
 </html>
