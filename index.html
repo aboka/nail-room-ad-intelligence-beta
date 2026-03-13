@@ -562,8 +562,16 @@ function handleUpload(e, num) {
   reader.onload = ev => {
     const wb = XLSX.read(ev.target.result, { type:'binary' });
     const ws = wb.Sheets[wb.SheetNames[0]];
-    const raw = XLSX.utils.sheet_to_json(ws, { defval: null });
-
+    // Meta exports have a 2-row title block before real headers (row 3)
+    // Try default parse first, if headers look wrong use range offset
+    let raw = XLSX.utils.sheet_to_json(ws, { defval: null });
+    // Check if first row looks like real data (has 'Ad set name' or similar)
+    const firstKeys = raw.length ? Object.keys(raw[0]) : [];
+    const hasRealHeaders = firstKeys.some(k => k && (k.includes('Ad') || k.includes('CTR') || k.includes('Text') || k.includes('Headline') || k.includes('Image')));
+    if (!hasRealHeaders) {
+      // Meta format: headers are on row 3, skip first 2 rows
+      raw = XLSX.utils.sheet_to_json(ws, { defval: null, range: 2 });
+    }
     const key = ['perf','text','headline','creative'][num-1];
     data[key] = raw;
 
@@ -634,19 +642,21 @@ function buildPerfTable() {
 }
 
 function buildTextTable() {
-  const rows = data.text || [];
+  const rows = (data.text || []).filter(r => {
+    const t = r['Text']; return t && t !== 'All' && t !== '' && t !== null;
+  });
   if (!rows.length) { document.getElementById('tbody-text').innerHTML = emptyRow(6,'Nincs Text riport feltöltve'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-text').innerHTML = rows.map(r => {
-    const text = r['Text'] || r['Body'] || r['Primary text'] || Object.values(r)[0] || '–';
+    const text = r['Text'] || '–';
     const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const clk  = parseInt(r['Unique link clicks']||0);
     const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||0);
     const conv = r['Results']||'–';
     const bw   = Math.round((ctr/maxCtr)*48);
     return `<tr>
-      <td style="max-width:320px;font-size:12px;font-style:italic">${String(text).substring(0,120)}${String(text).length>120?'…':''}</td>
+      <td style="max-width:340px;font-size:12px;font-style:italic;line-height:1.5">${String(text).substring(0,140)}${String(text).length>140?'…':''}</td>
       <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
       <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
       <td>$${spent.toFixed(2)}</td><td>${conv}</td>
@@ -655,15 +665,17 @@ function buildTextTable() {
 }
 
 function buildHeadlineTable() {
-  const rows = data.headline || [];
+  const rows = (data.headline || []).filter(r => {
+    const h = r['Headline (ad settings)']; return h && h !== 'All' && h !== '' && h !== null;
+  });
   if (!rows.length) { document.getElementById('tbody-headline').innerHTML = emptyRow(6,'Nincs Headline riport feltöltve'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-headline').innerHTML = rows.map(r => {
-    const hl   = r['Headline (ad settings)'] || r['Headline'] || Object.values(r)[0] || '–';
+    const hl   = r['Headline (ad settings)'] || '–';
     const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const clk  = parseInt(r['Unique link clicks']||0);
     const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||0);
     const conv = r['Results']||'–';
     const bw   = Math.round((ctr/maxCtr)*48);
     return `<tr>
@@ -676,15 +688,17 @@ function buildHeadlineTable() {
 }
 
 function buildCreativeTable() {
-  const rows = data.creative || [];
+  const rows = (data.creative || []).filter(r => {
+    const c = r['Image, video and slideshow']; return c && c !== 'All' && c !== '' && c !== null;
+  });
   if (!rows.length) { document.getElementById('tbody-creative').innerHTML = emptyRow(6,'Nincs Kreatív riport feltöltve'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-creative').innerHTML = rows.map(r => {
-    const name = r['Image, video and slideshow'] || r['Creative'] || Object.values(r)[0] || '–';
+    const name = r['Image, video and slideshow'] || '–';
     const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||r['Link clicks']||0);
+    const clk  = parseInt(r['Unique link clicks']||0);
     const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||r['Amount Spent (USD)']||0);
+    const spent= parseFloat(r['Amount spent (USD)']||0);
     const conv = r['Results']||'–';
     const bw   = Math.round((ctr/maxCtr)*48);
     const isVideo = String(name).toLowerCase().includes('video');
@@ -776,8 +790,12 @@ function formatTable(rows, preferredKeys) {
   const headers = Object.keys(rows[0]);
   const useKeys = preferredKeys.filter(k => headers.includes(k));
   const finalKeys = useKeys.length >= 2 ? useKeys : headers.slice(0, 8);
-
-  const lines = rows.slice(0, 40).map(r =>
+  // filter out 'All' summary rows for breakdown tables
+  const dataRows = rows.filter(r => {
+    const vals = finalKeys.map(k => r[k]);
+    return vals.some(v => v && v !== 'All' && v !== '');
+  });
+  const lines = (dataRows.length ? dataRows : rows).slice(0, 50).map(r =>
     finalKeys.map(k => `${k}: ${r[k] ?? '–'}`).join(' | ')
   );
   return lines.join('\n');
