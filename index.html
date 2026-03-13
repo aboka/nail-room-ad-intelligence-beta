@@ -560,17 +560,23 @@ function handleUpload(e, num) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
+    // Parse Meta xlsx: headers always on row 3 (index 2), data from row 4+
     const wb = XLSX.read(ev.target.result, { type:'binary' });
     const ws = wb.Sheets[wb.SheetNames[0]];
-    // Meta exports have a 2-row title block before real headers (row 3)
-    // Try default parse first, if headers look wrong use range offset
-    let raw = XLSX.utils.sheet_to_json(ws, { defval: null });
-    // Check if first row looks like real data (has 'Ad set name' or similar)
-    const firstKeys = raw.length ? Object.keys(raw[0]) : [];
-    const hasRealHeaders = firstKeys.some(k => k && (k.includes('Ad') || k.includes('CTR') || k.includes('Text') || k.includes('Headline') || k.includes('Image')));
-    if (!hasRealHeaders) {
-      // Meta format: headers are on row 3, skip first 2 rows
-      raw = XLSX.utils.sheet_to_json(ws, { defval: null, range: 2 });
+    const aoa = XLSX.utils.sheet_to_json(ws, { header:1, defval: null });
+    // Find header row: first row with >3 non-null cells
+    let hIdx = 0;
+    for (let i = 0; i < Math.min(8, aoa.length); i++) {
+      if (aoa[i].filter(v => v !== null && v !== '').length > 3) { hIdx = i; break; }
+    }
+    const headers = aoa[hIdx];
+    const raw = [];
+    for (let i = hIdx + 1; i < aoa.length; i++) {
+      const row = aoa[i];
+      if (!row || row.every(v => v === null || v === '')) continue;
+      const obj = {};
+      headers.forEach((h, idx) => { if (h) obj[h] = row[idx] ?? null; });
+      raw.push(obj);
     }
     const key = ['perf','text','headline','creative'][num-1];
     data[key] = raw;
