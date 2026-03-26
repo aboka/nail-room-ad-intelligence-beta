@@ -456,15 +456,7 @@ tr:hover td { background:var(--black3); }
       <button class="back-btn" onclick="goScreen('s-analysis',2)">← Vissza az adatokhoz</button>
     </div>
 
-    <!-- API key -->
-    <div class="api-key-section" id="api-key-section">
-      <div class="ak-title">ANTHROPIC API KULCS</div>
-      <div class="ak-row">
-        <input type="password" class="ak-input" id="api-key-input" placeholder="sk-ant-api03-..." value="">
-        <button class="btn btn-pink" onclick="saveApiKey()" style="padding:11px 20px;font-size:10px;white-space:nowrap">Mentés →</button>
-      </div>
-      <div class="ak-note">Az API kulcs csak a böngésződben tárolódik (sessionStorage) · Szerezd be: console.anthropic.com</div>
-    </div>
+
 
     <!-- Loading -->
     <div class="loading-state" id="loading-state">
@@ -500,14 +492,7 @@ tr:hover td { background:var(--black3); }
 // ── STATE ──
 const data = { perf: null, text: null, headline: null, creative: null };
 let currentPrompt = '';
-let apiKey = sessionStorage.getItem('nr_api_key') || '';
-
-if (apiKey) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const inp = document.getElementById('api-key-input');
-    if (inp) inp.value = apiKey;
-  });
-}
+const apiKey = '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';
 
 const BRIEF = `
 BUSINESS BRIEF – THE NAIL ROOM BALI
@@ -685,24 +670,10 @@ function buildCreativeTable() {
 // ── GO TO RESULT & CALL API ──
 function goResult() {
   goScreen('s-result', 3);
-  // show/hide api key section
-  if (apiKey && apiKey.startsWith('sk-')) {
-    document.getElementById('api-key-section').style.display = 'none';
-  } else {
-    document.getElementById('api-key-section').style.display = 'block';
-    return; // wait for user to enter key
-  }
   runAnalysis();
 }
 
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val.startsWith('sk-')) { alert('Az API kulcsnak sk- előtaggal kell kezdődnie.'); return; }
-  apiKey = val;
-  sessionStorage.setItem('nr_api_key', apiKey);
-  document.getElementById('api-key-section').style.display = 'none';
-  runAnalysis();
-}
+
 
 async function runAnalysis() {
   // Reset UI
@@ -722,7 +693,8 @@ async function runAnalysis() {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true'
+        'anthropic-dangerous-direct-browser-calls': 'true',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
@@ -971,11 +943,7 @@ function switchTab(id, el) {
 function sum(arr, fn) { return arr.reduce((s,r) => s + (fn(r)||0), 0); }
 function emptyRow(cols, msg) { return `<tr><td colspan="${cols}" style="text-align:center;opacity:.35;font-style:italic;padding:24px">${msg}</td></tr>`; }
 
-// Init api key field
-window.addEventListener('DOMContentLoaded', () => {
-  const inp = document.getElementById('api-key-input');
-  if (inp && apiKey) inp.value = apiKey;
-});
+
 </script>
 </body>
 </html>
