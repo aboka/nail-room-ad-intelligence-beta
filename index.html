@@ -42,36 +42,24 @@ body { background:var(--black); color:var(--white); font-family:'Jost',sans-seri
 }
 
 .logo { display:flex; align-items:center; gap:12px; }
-
 .logo-box {
   background: var(--black);
   border: 1px solid var(--border);
   border-radius: 3px;
   padding: 5px 9px;
-  line-height:1;
-  text-align:center;
+  line-height:1; text-align:center;
 }
-
 .logo-the { font-family:'DM Mono',monospace; font-size:7px; color:var(--white); letter-spacing:1px; margin-bottom:2px; }
 .logo-nail { font-family:'Libre Baskerville',serif; font-size:13px; font-weight:700; color:var(--pink); line-height:1.15; }
-
 .logo-text { display:flex; flex-direction:column; }
 .logo-title { font-family:'Libre Baskerville',serif; font-size:14px; color:var(--white); }
 .logo-sub { font-family:'DM Mono',monospace; font-size:8px; color:var(--pink); letter-spacing:2px; opacity:.6; margin-top:2px; }
 
 /* Step indicator */
-.steps-header {
-  display:flex; align-items:center; gap:0;
-}
-
-.sh-item {
-  display:flex; align-items:center; gap:8px;
-  padding: 0 14px;
-  opacity:.3; transition:opacity .3s;
-}
+.steps-header { display:flex; align-items:center; gap:0; }
+.sh-item { display:flex; align-items:center; gap:8px; padding:0 14px; opacity:.3; transition:opacity .3s; }
 .sh-item.active { opacity:1; }
 .sh-item.done { opacity:.55; }
-
 .sh-num {
   width:22px; height:22px; border-radius:50%;
   border:1.5px solid var(--pink);
@@ -80,133 +68,67 @@ body { background:var(--black); color:var(--white); font-family:'Jost',sans-seri
 }
 .sh-item.active .sh-num { background:var(--pink); color:var(--black); border-color:var(--pink); }
 .sh-item.done .sh-num { background:var(--green); border-color:var(--green); color:var(--black); }
-
 .sh-label { font-family:'DM Mono',monospace; font-size:9px; color:var(--white); letter-spacing:1.5px; white-space:nowrap; }
 .sh-div { width:16px; height:1px; background:var(--border); }
 
 /* ── MAIN ── */
 .main { max-width:1100px; margin:0 auto; padding:40px 24px 80px; }
-
 .screen { display:none; }
 .screen.active { display:block; animation:fadeIn .4s ease; }
-
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── UPLOAD SCREEN ── */
 .upload-intro { text-align:center; max-width:560px; margin:0 auto 48px; }
-
 .eyebrow { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--pink); margin-bottom:16px; }
-
 .upload-title { font-family:'Libre Baskerville',serif; font-size:44px; line-height:1.1; margin-bottom:10px; }
 .upload-title em { color:var(--pink); font-style:italic; font-weight:400; }
-
 .upload-sub { font-size:14px; color:var(--muted); line-height:1.7; font-style:italic; }
 
-/* Upload grid */
-.upload-grid {
-  display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:16px;
-  margin-bottom:32px;
-}
-
+.upload-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:32px; }
 .upload-card {
-  background: var(--black2);
-  border: 1px solid var(--border);
-  border-radius:8px;
-  overflow:hidden;
-  transition: border-color .2s;
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; overflow:hidden; transition:border-color .2s;
 }
-
-.upload-card.filled { border-color: var(--green); }
-
-.uc-head {
-  padding:14px 18px;
-  background: var(--black3);
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-}
-
-.uc-num {
-  font-family:'DM Mono',monospace; font-size:9px;
-  color:var(--pink); letter-spacing:2px;
-}
-
+.upload-card.filled { border-color:var(--green); }
+.uc-head { padding:14px 18px; background:var(--black3); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.uc-num { font-family:'DM Mono',monospace; font-size:9px; color:var(--pink); letter-spacing:2px; }
 .uc-check { color:var(--green); font-size:14px; display:none; }
 .upload-card.filled .uc-check { display:block; }
-
 .uc-title { font-family:'Libre Baskerville',serif; font-size:16px; font-style:italic; padding:14px 18px 4px; }
-
 .uc-desc { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); padding:0 18px 14px; letter-spacing:.5px; line-height:1.6; }
-
 .uc-drop {
-  margin:0 18px 18px;
-  border:1px dashed rgba(232,130,154,.3);
-  border-radius:5px;
-  padding:18px;
-  text-align:center;
-  cursor:pointer;
-  position:relative;
-  transition:all .2s;
-  background: rgba(255,255,255,.02);
+  margin:0 18px 18px; border:1px dashed rgba(232,130,154,.3); border-radius:5px;
+  padding:18px; text-align:center; cursor:pointer; position:relative; transition:all .2s;
+  background:rgba(255,255,255,.02);
 }
-
 .uc-drop:hover { border-color:var(--pink); background:rgba(232,130,154,.04); }
 .upload-card.filled .uc-drop { border-color:rgba(90,173,122,.4); background:rgba(90,173,122,.04); }
-
 .uc-drop input { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
-
 .uc-drop-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; }
 .upload-card.filled .uc-drop-label { color:var(--green); }
-
 .uc-filename { font-family:'DM Mono',monospace; font-size:10px; color:var(--green); margin-top:4px; display:none; }
 .upload-card.filled .uc-filename { display:block; }
 
-/* Proceed */
 .proceed-section { text-align:center; }
-
-.btn {
-  font-family:'DM Mono',monospace; font-size:11px;
-  letter-spacing:1.5px; padding:13px 28px;
-  border-radius:4px; border:none; cursor:pointer;
-  transition:all .2s;
-}
-
+.btn { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:1.5px; padding:13px 28px; border-radius:4px; border:none; cursor:pointer; transition:all .2s; }
 .btn-pink { background:var(--pink); color:var(--black); font-weight:500; }
 .btn-pink:hover { background:var(--pink2); transform:translateY(-1px); box-shadow:0 6px 20px rgba(232,130,154,.25); }
 .btn-pink:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
-
 .btn-ghost { background:transparent; color:var(--pink); border:1px solid var(--border); }
 .btn-ghost:hover { border-color:var(--pink); }
-
 .upload-note { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:12px; letter-spacing:.5px; }
 
 /* ── ANALYSIS SCREEN ── */
-.analysis-top {
-  display:flex; align-items:flex-start; justify-content:space-between;
-  margin-bottom:32px; gap:16px;
-}
-
+.analysis-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:32px; gap:16px; }
 .analysis-title { font-family:'Libre Baskerville',serif; font-size:30px; font-style:italic; }
 .analysis-title span { color:var(--pink); }
 
-/* Summary cards */
-.summary-grid {
-  display:grid; grid-template-columns:repeat(5,1fr);
-  gap:12px; margin-bottom:28px;
-}
-
-.sum-card {
-  background:var(--black2); border:1px solid var(--border);
-  border-radius:6px; padding:18px 16px;
-}
-
+.summary-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px; }
+.sum-card { background:var(--black2); border:1px solid var(--border); border-radius:6px; padding:18px 16px; }
 .sum-val { font-family:'Libre Baskerville',serif; font-size:26px; margin-bottom:4px; }
 .sum-lbl { font-family:'DM Mono',monospace; font-size:9px; color:var(--pink); letter-spacing:1.5px; opacity:.7; }
 
-/* Data tabs */
 .data-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:24px; }
-
 .dtab {
   font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px;
   padding:10px 18px; color:var(--muted); cursor:pointer;
@@ -215,106 +137,172 @@ body { background:var(--black); color:var(--white); font-family:'Jost',sans-seri
 }
 .dtab:hover { color:var(--pink); }
 .dtab.active { color:var(--pink); border-bottom-color:var(--pink); }
-
 .dtab-content { display:none; }
 .dtab-content.active { display:block; animation:fadeIn .3s ease; }
 
-/* Table */
 .table-wrap { background:var(--black2); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:24px; }
-
 .tw-head { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
 .tw-title { font-family:'Libre Baskerville',serif; font-size:17px; font-style:italic; }
-
 table { width:100%; border-collapse:collapse; }
 th { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.2px; color:var(--pink); text-align:left; padding:9px 14px; background:var(--black3); border-bottom:1px solid var(--border); opacity:.8; }
 td { padding:11px 14px; border-bottom:1px solid rgba(232,130,154,.07); font-size:13px; color:rgba(255,255,255,.82); vertical-align:middle; }
 tr:last-child td { border-bottom:none; }
 tr:hover td { background:var(--black3); }
-
 .badge { font-family:'DM Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; letter-spacing:1px; }
 .b-active { background:rgba(90,173,122,.12); color:var(--green); border:1px solid rgba(90,173,122,.3); }
 .b-paused { background:rgba(224,112,112,.1); color:var(--red); border:1px solid rgba(224,112,112,.25); }
-
 .dot { width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px; }
 .dot-good{background:var(--green)} .dot-warn{background:var(--gold)} .dot-bad{background:var(--red)}
-
 .bar-wrap { display:flex;align-items:center;gap:7px; }
 .bar-bg { width:50px;height:3px;background:rgba(232,130,154,.15);border-radius:2px; }
 .bar-fill { height:3px;border-radius:2px;background:var(--pink); }
 
-/* ── PROMPT SCREEN ── */
-.prompt-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:28px; gap:16px; }
-.prompt-title { font-family:'Libre Baskerville',serif; font-size:30px; font-style:italic; }
-.prompt-title span { color:var(--pink); }
+/* ── RESULT SCREEN ── */
+.result-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:28px; gap:16px; }
+.result-title { font-family:'Libre Baskerville',serif; font-size:30px; font-style:italic; }
+.result-title span { color:var(--pink); }
 
-.prompt-desc { font-size:14px; color:var(--muted); font-style:italic; line-height:1.7; margin-bottom:24px; max-width:640px; }
+/* Loading state */
+.loading-state {
+  text-align:center; padding:80px 40px;
+  display:none;
+}
+.loading-state.visible { display:block; }
 
-.prompt-box {
+.loading-icon {
+  width:56px; height:56px; border-radius:50%;
+  border:2px solid rgba(232,130,154,.15);
+  border-top-color:var(--pink);
+  animation:spin .9s linear infinite;
+  margin:0 auto 24px;
+}
+
+.loading-label {
+  font-family:'DM Mono',monospace; font-size:11px;
+  color:var(--pink); letter-spacing:2px; margin-bottom:8px;
+}
+.loading-sub {
+  font-size:13px; color:var(--muted); font-style:italic; line-height:1.7;
+}
+
+/* Streaming output */
+.analysis-output {
+  display:none;
+}
+.analysis-output.visible { display:block; }
+
+/* Sections rendered from Claude */
+.ai-section {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; margin-bottom:16px; overflow:hidden;
+}
+
+.ai-section-head {
+  padding:16px 22px; background:var(--black3);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:12px;
+}
+
+.ai-section-icon { font-size:18px; }
+.ai-section-title { font-family:'Libre Baskerville',serif; font-size:16px; font-style:italic; }
+
+.ai-section-body {
+  padding:22px;
+  font-size:14px; line-height:1.85; color:rgba(255,255,255,.8);
+  white-space:pre-wrap; font-family:'Jost',sans-serif;
+}
+
+/* Streaming text box – shown while loading */
+.stream-box {
   background:var(--black2); border:1px solid var(--border);
   border-radius:8px; overflow:hidden; margin-bottom:20px;
 }
-
-.pb-head {
-  padding:14px 20px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
+.stream-head {
+  padding:12px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
 }
-
-.pb-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--pink); }
-
-.pb-text {
-  padding:20px;
-  font-family:'DM Mono',monospace; font-size:12px;
-  line-height:1.8; color:rgba(255,255,255,.75);
-  white-space:pre-wrap;
-  max-height:400px; overflow-y:auto;
+.stream-indicator {
+  width:8px;height:8px;border-radius:50%;background:var(--pink);
+  animation:pulse 1.2s ease-in-out infinite;
 }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+.stream-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--pink); letter-spacing:1.5px; }
+.stream-body {
+  padding:22px; font-size:13px; line-height:1.85;
+  color:rgba(255,255,255,.75); white-space:pre-wrap;
+  max-height:500px; overflow-y:auto;
+  font-family:'DM Mono',monospace;
+}
+.stream-body::-webkit-scrollbar { width:4px; }
+.stream-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
-.pb-text::-webkit-scrollbar { width:4px; }
-.pb-text::-webkit-scrollbar-track { background:transparent; }
-.pb-text::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+/* Formatted result */
+.formatted-result { display:none; }
+.formatted-result.visible { display:block; animation:fadeIn .4s ease; }
 
-.copy-btn {
+.result-section {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; margin-bottom:14px; overflow:hidden;
+}
+.rs-head {
+  padding:15px 22px; background:var(--black3);
+  border-bottom:1px solid var(--border);
   font-family:'DM Mono',monospace; font-size:10px;
-  letter-spacing:1px; padding:7px 14px;
-  background:transparent; color:var(--pink);
-  border:1px solid var(--border); border-radius:3px;
-  cursor:pointer; transition:all .2s;
+  color:var(--pink); letter-spacing:2px;
+  display:flex; align-items:center; gap:10px;
 }
-.copy-btn:hover { border-color:var(--pink); background:rgba(232,130,154,.06); }
-.copy-btn.copied { color:var(--green); border-color:var(--green); }
+.rs-body {
+  padding:22px; font-size:14px; line-height:1.85;
+  color:rgba(255,255,255,.82);
+}
+.rs-body p { margin-bottom:10px; }
+.rs-body p:last-child { margin-bottom:0; }
+.rs-body strong { color:var(--white); font-weight:500; }
+.rs-body ul { margin-left:18px; margin-top:6px; margin-bottom:6px; }
+.rs-body li { margin-bottom:5px; }
 
-.steps-guide {
+/* Raw fallback */
+.raw-result {
   background:var(--black2); border:1px solid var(--border);
   border-radius:8px; padding:24px;
+  font-size:14px; line-height:1.85;
+  color:rgba(255,255,255,.82);
+  white-space:pre-wrap;
+  display:none;
 }
+.raw-result.visible { display:block; }
 
-.sg-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--pink); margin-bottom:18px; }
-
-.sg-step {
-  display:flex; gap:14px; align-items:flex-start;
-  padding:12px 0; border-bottom:1px solid rgba(232,130,154,.08);
+/* Error state */
+.error-box {
+  background:rgba(224,112,112,.08); border:1px solid rgba(224,112,112,.25);
+  border-radius:8px; padding:24px; text-align:center;
+  display:none;
 }
-.sg-step:last-child { border-bottom:none; }
+.error-box.visible { display:block; }
+.error-title { font-family:'Libre Baskerville',serif; font-size:18px; font-style:italic; color:var(--red); margin-bottom:8px; }
+.error-sub { font-size:13px; color:var(--muted); line-height:1.7; }
 
-.sg-num {
-  width:24px; height:24px; border-radius:50%;
-  background:var(--pink); color:var(--black);
-  font-family:'DM Mono',monospace; font-size:10px; font-weight:500;
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; margin-top:1px;
+/* API key input */
+.api-key-section {
+  background:var(--black2); border:1px solid var(--border);
+  border-radius:8px; padding:24px; margin-bottom:24px;
 }
-
-.sg-text { font-size:14px; line-height:1.6; color:rgba(255,255,255,.75); }
-.sg-text strong { color:var(--white); font-weight:500; }
-.sg-text a { color:var(--pink); text-decoration:none; }
-.sg-text a:hover { text-decoration:underline; }
+.ak-title { font-family:'DM Mono',monospace; font-size:10px; color:var(--pink); letter-spacing:2px; margin-bottom:14px; }
+.ak-row { display:flex; gap:10px; align-items:center; }
+.ak-input {
+  flex:1; background:var(--black3); border:1px solid var(--border);
+  border-radius:4px; padding:11px 14px;
+  font-family:'DM Mono',monospace; font-size:12px; color:var(--white);
+  outline:none; transition:border-color .2s;
+}
+.ak-input:focus { border-color:var(--pink); }
+.ak-input::placeholder { color:var(--muted); }
+.ak-note { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); margin-top:8px; letter-spacing:.5px; line-height:1.6; }
 
 /* back nav */
 .back-btn { font-family:'DM Mono',monospace; font-size:10px; color:var(--pink); background:none; border:none; cursor:pointer; letter-spacing:1px; opacity:.65; transition:opacity .2s; }
 .back-btn:hover { opacity:1; }
 
-/* spin */
-.spin { width:16px;height:16px; border:2px solid rgba(232,130,154,.2); border-top-color:var(--pink); border-radius:50%; animation:spin .7s linear infinite; display:inline-block; vertical-align:middle; margin-right:8px; }
 @keyframes spin { to{transform:rotate(360deg)} }
 </style>
 </head>
@@ -332,13 +320,12 @@ tr:hover td { background:var(--black3); }
       <div class="logo-sub">NAIL ROOM BALI · AD INTELLIGENCE</div>
     </div>
   </div>
-
   <div class="steps-header">
     <div class="sh-item active" id="sh1"><div class="sh-num">1</div><div class="sh-label">ADATOK</div></div>
     <div class="sh-div"></div>
     <div class="sh-item" id="sh2"><div class="sh-num">2</div><div class="sh-label">ELEMZÉS</div></div>
     <div class="sh-div"></div>
-    <div class="sh-item" id="sh3"><div class="sh-num">3</div><div class="sh-label">PROMPT</div></div>
+    <div class="sh-item" id="sh3"><div class="sh-num">3</div><div class="sh-label">AI ELEMZÉS</div></div>
   </div>
 </div>
 
@@ -349,16 +336,12 @@ tr:hover td { background:var(--black3); }
     <div class="upload-intro">
       <div class="eyebrow">HETI WORKFLOW</div>
       <h1 class="upload-title">Töltsd fel a<br><em>4 Meta riportot</em></h1>
-      <p class="upload-sub">Az AI elemzi a teljesítményt, szövegeket és kreatívokat – majd egy kész Claude promptot generál az optimalizáláshoz.</p>
+      <p class="upload-sub">Az AI elemzi a teljesítményt, szövegeket és kreatívokat – az elemzés egyből itt jelenik meg, nem kell sehova másolni.</p>
     </div>
 
     <div class="upload-grid">
-
       <div class="upload-card" id="card-1">
-        <div class="uc-head">
-          <span class="uc-num">RIPORT 01</span>
-          <span class="uc-check">✓</span>
-        </div>
+        <div class="uc-head"><span class="uc-num">RIPORT 01</span><span class="uc-check">✓</span></div>
         <div class="uc-title">Ad Teljesítmény</div>
         <div class="uc-desc">Ad set + Ad szint · CTR, CPC, konverzió,<br>elköltött összeg, reach, frequency</div>
         <div class="uc-drop">
@@ -367,12 +350,8 @@ tr:hover td { background:var(--black3); }
           <div class="uc-filename" id="fn-1"></div>
         </div>
       </div>
-
       <div class="upload-card" id="card-2">
-        <div class="uc-head">
-          <span class="uc-num">RIPORT 02</span>
-          <span class="uc-check">✓</span>
-        </div>
+        <div class="uc-head"><span class="uc-num">RIPORT 02</span><span class="uc-check">✓</span></div>
         <div class="uc-title">Primary Text riport</div>
         <div class="uc-desc">Dynamic Creative Asset: Text breakdown<br>Primary text szövegek + metrikák</div>
         <div class="uc-drop">
@@ -381,12 +360,8 @@ tr:hover td { background:var(--black3); }
           <div class="uc-filename" id="fn-2"></div>
         </div>
       </div>
-
       <div class="upload-card" id="card-3">
-        <div class="uc-head">
-          <span class="uc-num">RIPORT 03</span>
-          <span class="uc-check">✓</span>
-        </div>
+        <div class="uc-head"><span class="uc-num">RIPORT 03</span><span class="uc-check">✓</span></div>
         <div class="uc-title">Headline riport</div>
         <div class="uc-desc">Dynamic Creative Asset: Headline breakdown<br>Headline szövegek + metrikák</div>
         <div class="uc-drop">
@@ -395,12 +370,8 @@ tr:hover td { background:var(--black3); }
           <div class="uc-filename" id="fn-3"></div>
         </div>
       </div>
-
       <div class="upload-card" id="card-4">
-        <div class="uc-head">
-          <span class="uc-num">RIPORT 04</span>
-          <span class="uc-check">✓</span>
-        </div>
+        <div class="uc-head"><span class="uc-num">RIPORT 04</span><span class="uc-check">✓</span></div>
         <div class="uc-title">Image & Video riport</div>
         <div class="uc-desc">Dynamic Creative Asset: Image/video breakdown<br>Kreatív típus (foto/videó) + metrikák</div>
         <div class="uc-drop">
@@ -409,7 +380,6 @@ tr:hover td { background:var(--black3); }
           <div class="uc-filename" id="fn-4"></div>
         </div>
       </div>
-
     </div>
 
     <div class="proceed-section">
@@ -423,12 +393,10 @@ tr:hover td { background:var(--black3); }
   <!-- ══ SCREEN 2: ANALYSIS ══ -->
   <div class="screen" id="s-analysis">
     <div class="analysis-top">
-      <div>
-        <div class="analysis-title">Adatok <span>áttekintése</span></div>
-      </div>
+      <div><div class="analysis-title">Adatok <span>áttekintése</span></div></div>
       <div style="display:flex;gap:10px">
         <button class="back-btn" onclick="goScreen('s-upload',1)">← Új feltöltés</button>
-        <button class="btn btn-pink" onclick="goScreen('s-prompt',3)" style="padding:10px 22px;font-size:10px">Prompt generálása →</button>
+        <button class="btn btn-pink" onclick="goResult()" style="padding:10px 22px;font-size:10px">AI Elemzés indítása →</button>
       </div>
     </div>
 
@@ -452,7 +420,6 @@ tr:hover td { background:var(--black3); }
         <tbody id="tbody-perf"></tbody></table>
       </div>
     </div>
-
     <div class="dtab-content" id="t-text">
       <div class="table-wrap">
         <div class="tw-head"><div class="tw-title">Primary Text teljesítmény</div></div>
@@ -462,7 +429,6 @@ tr:hover td { background:var(--black3); }
         <tbody id="tbody-text"></tbody></table>
       </div>
     </div>
-
     <div class="dtab-content" id="t-headline">
       <div class="table-wrap">
         <div class="tw-head"><div class="tw-title">Headline teljesítmény</div></div>
@@ -472,7 +438,6 @@ tr:hover td { background:var(--black3); }
         <tbody id="tbody-headline"></tbody></table>
       </div>
     </div>
-
     <div class="dtab-content" id="t-creative">
       <div class="table-wrap">
         <div class="tw-head"><div class="tw-title">Kreatív típus teljesítmény</div></div>
@@ -482,47 +447,51 @@ tr:hover td { background:var(--black3); }
         <tbody id="tbody-creative"></tbody></table>
       </div>
     </div>
-
   </div>
 
-  <!-- ══ SCREEN 3: PROMPT ══ -->
-  <div class="screen" id="s-prompt">
-    <div class="prompt-top">
-      <div>
-        <div class="prompt-title">Claude <span>Prompt</span></div>
-      </div>
-      <button class="back-btn" onclick="goScreen('s-analysis',2)">← Vissza az elemzéshez</button>
+  <!-- ══ SCREEN 3: AI RESULT ══ -->
+  <div class="screen" id="s-result">
+    <div class="result-top">
+      <div><div class="result-title">AI <span>Elemzés</span></div></div>
+      <button class="back-btn" onclick="goScreen('s-analysis',2)">← Vissza az adatokhoz</button>
     </div>
 
-    <p class="prompt-desc">Az alábbi promptot másold be a <strong style="color:var(--white)">claude.ai</strong>-ba. Tartalmazza az összes adatot és a business kontextust – Claude részletes elemzést és javaslatokat ad.</p>
-
-    <div class="prompt-box">
-      <div class="pb-head">
-        <div class="pb-title">KÉSZ PROMPT · MÁSOLÁSRA</div>
-        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">📋 Másolás</button>
+    <!-- API key -->
+    <div class="api-key-section" id="api-key-section">
+      <div class="ak-title">ANTHROPIC API KULCS</div>
+      <div class="ak-row">
+        <input type="password" class="ak-input" id="api-key-input" placeholder="sk-ant-api03-..." value="">
+        <button class="btn btn-pink" onclick="saveApiKey()" style="padding:11px 20px;font-size:10px;white-space:nowrap">Mentés →</button>
       </div>
-      <div class="pb-text" id="prompt-text">Generálás...</div>
+      <div class="ak-note">Az API kulcs csak a böngésződben tárolódik (sessionStorage) · Szerezd be: console.anthropic.com</div>
     </div>
 
-    <div class="steps-guide">
-      <div class="sg-title">HOGYAN HASZNÁLD</div>
-      <div class="sg-step">
-        <div class="sg-num">1</div>
-        <div class="sg-text">Kattints a <strong>"📋 Másolás"</strong> gombra fent – a teljes prompt a vágólapra kerül</div>
-      </div>
-      <div class="sg-step">
-        <div class="sg-num">2</div>
-        <div class="sg-text">Nyisd meg: <a href="https://claude.ai" target="_blank">claude.ai</a> → új chat → illeszd be a promptot (Ctrl+V)</div>
-      </div>
-      <div class="sg-step">
-        <div class="sg-num">3</div>
-        <div class="sg-text">Claude <strong>magyarul elemez</strong> és ad javaslatot: budget, kreatív, szöveg, célközönség</div>
-      </div>
-      <div class="sg-step">
-        <div class="sg-num">4</div>
-        <div class="sg-text">Ha többet szeretnél tudni, kérdezz rá Claude-nál – ismeri az összes adatodat</div>
-      </div>
+    <!-- Loading -->
+    <div class="loading-state" id="loading-state">
+      <div class="loading-icon"></div>
+      <div class="loading-label">CLAUDE ELEMEZ</div>
+      <div class="loading-sub">Az AI feldolgozza az adatokat és javaslatokat készít…<br>Ez 20-40 másodpercet vehet igénybe.</div>
     </div>
+
+    <!-- Streaming box (shows during generation) -->
+    <div class="stream-box" id="stream-box" style="display:none">
+      <div class="stream-head">
+        <div class="stream-indicator"></div>
+        <div class="stream-label">CLAUDE ÍR…</div>
+      </div>
+      <div class="stream-body" id="stream-body"></div>
+    </div>
+
+    <!-- Formatted result -->
+    <div class="formatted-result" id="formatted-result"></div>
+
+    <!-- Error -->
+    <div class="error-box" id="error-box">
+      <div class="error-title">Hiba történt</div>
+      <div class="error-sub" id="error-msg">Az API hívás sikertelen. Ellenőrizd az API kulcsot és próbáld újra.</div>
+      <button class="btn btn-ghost" onclick="retryAnalysis()" style="margin-top:16px">↺ Újrapróbálás</button>
+    </div>
+
   </div>
 
 </div>
@@ -530,6 +499,15 @@ tr:hover td { background:var(--black3); }
 <script>
 // ── STATE ──
 const data = { perf: null, text: null, headline: null, creative: null };
+let currentPrompt = '';
+let apiKey = sessionStorage.getItem('nr_api_key') || '';
+
+if (apiKey) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('api-key-input');
+    if (inp) inp.value = apiKey;
+  });
+}
 
 const BRIEF = `
 BUSINESS BRIEF – THE NAIL ROOM BALI
@@ -544,7 +522,7 @@ Meta Ads havi büdzsé: $280 USD
 Átlagos foglalási érték (AOV): $36 USD
 Fő cél: Időpont foglalás (website schedule konverzió)
 
-USP – Miért válasszák a Nail Room-ot:
+USP:
 • 150+ Five-Star Google review Sanur-ban
 • Sterilizált eszközök minden ügyfelnek – hygiene fókusz
 • Russian manicure + BIAB specialista
@@ -560,11 +538,9 @@ function handleUpload(e, num) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    // Parse Meta xlsx: headers always on row 3 (index 2), data from row 4+
     const wb = XLSX.read(ev.target.result, { type:'binary' });
     const ws = wb.Sheets[wb.SheetNames[0]];
     const aoa = XLSX.utils.sheet_to_json(ws, { header:1, defval: null });
-    // Find header row: first row with >3 non-null cells
     let hIdx = 0;
     for (let i = 0; i < Math.min(8, aoa.length); i++) {
       if (aoa[i].filter(v => v !== null && v !== '').length > 3) { hIdx = i; break; }
@@ -580,15 +556,25 @@ function handleUpload(e, num) {
     }
     const key = ['perf','text','headline','creative'][num-1];
     data[key] = raw;
-
     document.getElementById(`card-${num}`).classList.add('filled');
     document.getElementById(`fn-${num}`).textContent = file.name;
     document.getElementById(`lbl-${num}`).textContent = '✓ Feltöltve';
-
-    // enable proceed if at least perf is loaded
     if (data.perf) document.getElementById('btn-proceed').disabled = false;
   };
   reader.readAsBinaryString(file);
+}
+
+// ── SAVE API KEY ──
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val.startsWith('sk-')) {
+    alert('Az API kulcsnak sk- előtaggal kell kezdődnie.');
+    return;
+  }
+  apiKey = val;
+  sessionStorage.setItem('nr_api_key', apiKey);
+  document.getElementById('api-key-section').style.opacity = '0.5';
+  setTimeout(() => { document.getElementById('api-key-section').style.display = 'none'; }, 400);
 }
 
 // ── ANALYSIS ──
@@ -609,7 +595,6 @@ function buildSummary() {
   const avgCtr = ctrRows.length ? sum(ctrRows, r => parseFloat(r['CTR (link click-through rate)']||0)) / ctrRows.length : 0;
   const active = rows.filter(r => (r['Ad delivery']||'').toLowerCase() === 'active').length;
   const roas = totalSpent > 0 ? ((totalConv * 36) / totalSpent).toFixed(2) : '–';
-
   document.getElementById('sum-grid').innerHTML = `
     <div class="sum-card"><div class="sum-val">$${totalSpent.toFixed(0)}</div><div class="sum-lbl">ELKÖLTVE</div></div>
     <div class="sum-card"><div class="sum-val">${totalConv}</div><div class="sum-lbl">KONVERZIÓ</div></div>
@@ -621,7 +606,7 @@ function buildSummary() {
 
 function buildPerfTable() {
   const rows = data.perf || [];
-  if (!rows.length) { document.getElementById('tbody-perf').innerHTML = `<tr><td colspan="9" style="text-align:center;opacity:.4;font-style:italic;padding:24px">Nincs adat feltöltve</td></tr>`; return; }
+  if (!rows.length) { document.getElementById('tbody-perf').innerHTML = emptyRow(9,'Nincs adat'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-perf').innerHTML = rows.map(r => {
     const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
@@ -634,110 +619,275 @@ function buildPerfTable() {
     const lbl  = s==='good'?'Kiváló':s==='warn'?'Közepes':'Gyenge';
     const bw   = Math.round((ctr/maxCtr)*48);
     return `<tr>
-      <td><strong style="font-size:13px">${r['Ad name']||'–'}</strong></td>
+      <td><strong>${r['Ad name']||'–'}</strong></td>
       <td style="opacity:.6;font-size:12px">${r['Ad set name']||'–'}</td>
       <td><span class="badge ${del==='active'?'b-active':'b-paused'}">${del==='active'?'AKTÍV':'SZÜNET'}</span></td>
       <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
-      <td>$${cpc.toFixed(3)}</td>
-      <td>$${spent.toFixed(2)}</td>
-      <td>${conv||'–'}</td>
-      <td>${freq.toFixed(2)}</td>
+      <td>$${cpc.toFixed(3)}</td><td>$${spent.toFixed(2)}</td>
+      <td>${conv||'–'}</td><td>${freq.toFixed(2)}</td>
       <td><span class="dot dot-${s}"></span>${lbl}</td>
     </tr>`;
   }).join('');
 }
 
 function buildTextTable() {
-  const rows = (data.text || []).filter(r => {
-    const t = r['Text']; return t && t !== 'All' && t !== '' && t !== null;
-  });
-  if (!rows.length) { document.getElementById('tbody-text').innerHTML = emptyRow(6,'Nincs Text riport feltöltve'); return; }
+  const rows = (data.text||[]).filter(r => { const t=r['Text']; return t&&t!=='All'&&t!==''; });
+  if (!rows.length) { document.getElementById('tbody-text').innerHTML = emptyRow(6,'Nincs Text riport'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-text').innerHTML = rows.map(r => {
-    const text = r['Text'] || '–';
-    const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||0);
-    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||0);
-    const conv = r['Results']||'–';
-    const bw   = Math.round((ctr/maxCtr)*48);
+    const text=r['Text']||'–', imp=parseInt(r['Impressions']||0), clk=parseInt(r['Unique link clicks']||0);
+    const ctr=parseFloat(r['CTR (link click-through rate)']||0), spent=parseFloat(r['Amount spent (USD)']||0);
+    const bw=Math.round((ctr/maxCtr)*48);
     return `<tr>
       <td style="max-width:340px;font-size:12px;font-style:italic;line-height:1.5">${String(text).substring(0,140)}${String(text).length>140?'…':''}</td>
       <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
       <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
-      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+      <td>$${spent.toFixed(2)}</td><td>${r['Results']||'–'}</td>
     </tr>`;
   }).join('');
 }
 
 function buildHeadlineTable() {
-  const rows = (data.headline || []).filter(r => {
-    const h = r['Headline (ad settings)']; return h && h !== 'All' && h !== '' && h !== null;
-  });
-  if (!rows.length) { document.getElementById('tbody-headline').innerHTML = emptyRow(6,'Nincs Headline riport feltöltve'); return; }
+  const rows = (data.headline||[]).filter(r => { const h=r['Headline (ad settings)']; return h&&h!=='All'&&h!==''; });
+  if (!rows.length) { document.getElementById('tbody-headline').innerHTML = emptyRow(6,'Nincs Headline riport'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-headline').innerHTML = rows.map(r => {
-    const hl   = r['Headline (ad settings)'] || '–';
-    const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||0);
-    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||0);
-    const conv = r['Results']||'–';
-    const bw   = Math.round((ctr/maxCtr)*48);
+    const hl=r['Headline (ad settings)']||'–', imp=parseInt(r['Impressions']||0), clk=parseInt(r['Unique link clicks']||0);
+    const ctr=parseFloat(r['CTR (link click-through rate)']||0), spent=parseFloat(r['Amount spent (USD)']||0);
+    const bw=Math.round((ctr/maxCtr)*48);
     return `<tr>
-      <td style="font-size:13px"><strong>${hl}</strong></td>
+      <td><strong>${hl}</strong></td>
       <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
       <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
-      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+      <td>$${spent.toFixed(2)}</td><td>${r['Results']||'–'}</td>
     </tr>`;
   }).join('');
 }
 
 function buildCreativeTable() {
-  const rows = (data.creative || []).filter(r => {
-    const c = r['Image, video and slideshow']; return c && c !== 'All' && c !== '' && c !== null;
-  });
-  if (!rows.length) { document.getElementById('tbody-creative').innerHTML = emptyRow(6,'Nincs Kreatív riport feltöltve'); return; }
+  const rows = (data.creative||[]).filter(r => { const c=r['Image, video and slideshow']; return c&&c!=='All'&&c!==''; });
+  if (!rows.length) { document.getElementById('tbody-creative').innerHTML = emptyRow(6,'Nincs Kreatív riport'); return; }
   const maxCtr = Math.max(...rows.map(r => parseFloat(r['CTR (link click-through rate)']||0)), 1);
   document.getElementById('tbody-creative').innerHTML = rows.map(r => {
-    const name = r['Image, video and slideshow'] || '–';
-    const imp  = parseInt(r['Impressions']||0);
-    const clk  = parseInt(r['Unique link clicks']||0);
-    const ctr  = parseFloat(r['CTR (link click-through rate)']||0);
-    const spent= parseFloat(r['Amount spent (USD)']||0);
-    const conv = r['Results']||'–';
-    const bw   = Math.round((ctr/maxCtr)*48);
-    const isVideo = String(name).toLowerCase().includes('video');
+    const name=r['Image, video and slideshow']||'–', imp=parseInt(r['Impressions']||0), clk=parseInt(r['Unique link clicks']||0);
+    const ctr=parseFloat(r['CTR (link click-through rate)']||0), spent=parseFloat(r['Amount spent (USD)']||0);
+    const isVideo=String(name).toLowerCase().includes('video');
+    const bw=Math.round((ctr/maxCtr)*48);
     return `<tr>
       <td style="font-size:12px">${isVideo?'🎬':'📷'} ${String(name).substring(0,80)}</td>
       <td>${imp.toLocaleString()}</td><td>${clk.toLocaleString()}</td>
       <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bw}px"></div></div>${ctr.toFixed(2)}%</div></td>
-      <td>$${spent.toFixed(2)}</td><td>${conv}</td>
+      <td>$${spent.toFixed(2)}</td><td>${r['Results']||'–'}</td>
     </tr>`;
   }).join('');
 }
 
-// ── PROMPT ──
-function goScreen(id, step) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  setStep(step);
-  if (id === 's-prompt') buildPrompt();
+// ── GO TO RESULT & CALL API ──
+function goResult() {
+  goScreen('s-result', 3);
+  // show/hide api key section
+  if (apiKey && apiKey.startsWith('sk-')) {
+    document.getElementById('api-key-section').style.display = 'none';
+  } else {
+    document.getElementById('api-key-section').style.display = 'block';
+    return; // wait for user to enter key
+  }
+  runAnalysis();
 }
 
-function buildPrompt() {
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val.startsWith('sk-')) { alert('Az API kulcsnak sk- előtaggal kell kezdődnie.'); return; }
+  apiKey = val;
+  sessionStorage.setItem('nr_api_key', apiKey);
+  document.getElementById('api-key-section').style.display = 'none';
+  runAnalysis();
+}
+
+async function runAnalysis() {
+  // Reset UI
+  document.getElementById('loading-state').classList.add('visible');
+  document.getElementById('stream-box').style.display = 'none';
+  document.getElementById('formatted-result').classList.remove('visible');
+  document.getElementById('formatted-result').innerHTML = '';
+  document.getElementById('error-box').classList.remove('visible');
+
+  const prompt = buildPromptText();
+  currentPrompt = prompt;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        stream: true,
+        system: 'Te egy tapasztalt Meta Ads stratéga vagy, aki prémium szépségszalonok hirdetéseit optimalizálja. Elemzéseid konkrétak, számokkal alátámasztottak és azonnal cselekvésre ösztönzők. Mindig magyarul válaszolj. Strukturált elemzést adj, de közérthetően írj.',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || `HTTP ${response.status}`);
+    }
+
+    document.getElementById('loading-state').classList.remove('visible');
+    document.getElementById('stream-box').style.display = 'block';
+    const streamBody = document.getElementById('stream-body');
+    streamBody.textContent = '';
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+              fullText += parsed.delta.text;
+              streamBody.textContent = fullText;
+              streamBody.scrollTop = streamBody.scrollHeight;
+            }
+          } catch(e) { /* skip malformed */ }
+        }
+      }
+    }
+
+    // Done – format and show
+    document.getElementById('stream-box').style.display = 'none';
+    renderFormattedResult(fullText);
+
+  } catch (err) {
+    document.getElementById('loading-state').classList.remove('visible');
+    document.getElementById('stream-box').style.display = 'none';
+    document.getElementById('error-box').classList.add('visible');
+    document.getElementById('error-msg').textContent = err.message || 'Ismeretlen hiba. Ellenőrizd az API kulcsot.';
+  }
+}
+
+function retryAnalysis() {
+  document.getElementById('error-box').classList.remove('visible');
+  if (!apiKey || !apiKey.startsWith('sk-')) {
+    document.getElementById('api-key-section').style.display = 'block';
+  } else {
+    runAnalysis();
+  }
+}
+
+// ── RENDER RESULT ──
+function renderFormattedResult(text) {
+  const container = document.getElementById('formatted-result');
+
+  // Split by section markers: lines starting with emojis or ══ or numbered sections
+  const sections = [];
+  const sectionPatterns = [
+    /^(💸|🎨|✍️|🎯|🏗️)\s*(.+)/,
+    /^#+\s*(.+)/,
+    /^\d+\.\s*(💸|🎨|✍️|🎯|🏗️)\s*(.+)/
+  ];
+
+  const lines = text.split('\n');
+  let currentSection = null;
+  let currentBody = [];
+
+  const flushSection = () => {
+    if (currentSection !== null) {
+      sections.push({ title: currentSection.title, icon: currentSection.icon, body: currentBody.join('\n').trim() });
+    }
+    currentBody = [];
+  };
+
+  for (const line of lines) {
+    let matched = false;
+    for (const pat of sectionPatterns) {
+      const m = line.match(pat);
+      if (m) {
+        flushSection();
+        const icon = m[1] && ['💸','🎨','✍️','🎯','🏗️'].includes(m[1]) ? m[1] : '📋';
+        const title = m[2] || m[1] || line.replace(/^#+\s*/, '');
+        currentSection = { title: title.trim(), icon };
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      currentBody.push(line);
+    }
+  }
+  flushSection();
+
+  // If no sections detected, show raw
+  if (sections.length === 0) {
+    container.innerHTML = `<div class="raw-result visible">${escHtml(text)}</div>`;
+  } else {
+    container.innerHTML = sections.map(s => `
+      <div class="result-section">
+        <div class="rs-head">
+          <span>${s.icon}</span>
+          <span>${escHtml(s.title)}</span>
+        </div>
+        <div class="rs-body">${formatBody(s.body)}</div>
+      </div>
+    `).join('');
+  }
+
+  container.classList.add('visible');
+}
+
+function formatBody(text) {
+  if (!text) return '';
+  // Convert markdown-ish to html
+  let html = escHtml(text);
+  // Bold **text**
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Bullet lines
+  const lines = html.split('\n');
+  const out = [];
+  let inList = false;
+  for (const line of lines) {
+    const t = line.trim();
+    if (t.startsWith('- ') || t.startsWith('• ')) {
+      if (!inList) { out.push('<ul>'); inList = true; }
+      out.push(`<li>${t.slice(2)}</li>`);
+    } else {
+      if (inList) { out.push('</ul>'); inList = false; }
+      if (t) out.push(`<p>${t}</p>`);
+    }
+  }
+  if (inList) out.push('</ul>');
+  return out.join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── PROMPT BUILDER ──
+function buildPromptText() {
   const perf     = data.perf     ? formatTable(data.perf,     ['Ad name','Ad set name','Ad delivery','CTR (link click-through rate)','CPC (cost per link click) (USD)','Amount spent (USD)','Results','Frequency']) : 'Nem töltötték fel.';
-  const textData = data.text     ? formatTable(data.text,     ['Text','Body','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
-  const hlData   = data.headline ? formatTable(data.headline, ['Headline (ad settings)','Headline','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
+  const textData = data.text     ? formatTable(data.text,     ['Text','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
+  const hlData   = data.headline ? formatTable(data.headline, ['Headline (ad settings)','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
   const crData   = data.creative ? formatTable(data.creative, ['Image, video and slideshow','Impressions','CTR (link click-through rate)','Amount spent (USD)','Results']) : 'Nem töltötték fel.';
 
-  const prompt = `Te egy tapasztalt Meta Ads stratéga vagy, aki a The Nail Room Bali prémium körömszalon hirdetéseit optimalizálja. Elemezd az alábbi adatokat és adj konkrét, számokkal alátámasztott javaslatokat MAGYARUL.
+  return `${BRIEF}
 
 ════════════════════════════════════
-${BRIEF}
-
-════════════════════════════════════
-1. AD TELJESÍTMÉNY (Ad set + Ad szint)
+1. AD TELJESÍTMÉNY
 ════════════════════════════════════
 ${perf}
 
@@ -752,43 +902,37 @@ ${textData}
 ${hlData}
 
 ════════════════════════════════════
-4. KREATÍV (FOTO vs VIDEÓ) TELJESÍTMÉNY
+4. KREATÍV TELJESÍTMÉNY
 ════════════════════════════════════
 ${crData}
 
 ════════════════════════════════════
 ELEMZÉSI FELADAT
 ════════════════════════════════════
-Kérlek elemezd az alábbi szempontok szerint, prioritás sorrendben:
+Elemezd az alábbi szempontok szerint, mindegyiket saját fejezetcímmel (az emoji-val kezdve):
 
-1. 💸 BUDGET OPTIMALIZÁLÁS
-   - Melyik Ad set-re / Ad-re érdemes többet költeni?
-   - Mit kell leállítani azonnal?
-   - Hogyan osszuk el a $280/hó büdzsét optimálisan?
+💸 BUDGET OPTIMALIZÁLÁS
+- Melyik Ad set-re / Ad-re érdemes többet költeni? Melyiket kell leállítani?
+- Optimális $280/hó büdzsé elosztás konkrét számokkal.
 
-2. 🎨 KREATÍV JAVASLATOK
-   - Fotó vs videó: melyik teljesít jobban és miért?
-   - Melyik kreatív érdemel több budget-et?
-   - Mit kell lecserélni?
+🎨 KREATÍV JAVASLATOK
+- Fotó vs videó teljesítmény összehasonlítás.
+- Melyik kreatív érdemel több budget-et? Mit kell lecserélni?
 
-3. ✍️ SZÖVEG OPTIMALIZÁLÁS
-   - Melyik headline konvertál legjobban?
-   - Melyik primary text működik?
-   - Adj 3 új headline javaslatot (max 30 karakter, angolul)
-   - Adj 2 új primary text javaslatot (angolul, prémium + hygiene fókusz)
+✍️ SZÖVEG OPTIMALIZÁLÁS
+- Legjobb headline és primary text azonosítása.
+- 3 új headline javaslat (max 30 karakter, angolul).
+- 2 új primary text javaslat (angolul, prémium + hygiene fókusz).
 
-4. 🎯 CÉLKÖZÖNSÉG JAVASLATOK
-   - Van-e frequency probléma?
-   - Audience fáradás jelei?
-   - Javasolt célzás módosítások?
+🎯 CÉLKÖZÖNSÉG JAVASLATOK
+- Frequency és audience fáradás elemzése.
+- Javasolt célzás módosítások.
 
-5. 🏗️ KAMPÁNY STRUKTÚRA
-   - Az aktuális struktúra (Retarget schedule, Cold Broad) optimális-e?
-   - Van-e javasolt változtatás?
+🏗️ KAMPÁNY STRUKTÚRA
+- Az aktuális struktúra értékelése.
+- Konkrét struktúra javaslatok.
 
-Légy konkrét: használj számokat, százalékokat. Ne általánosíts. Az elemzés alapja kizárólag a fenti adatok legyenek.`;
-
-  document.getElementById('prompt-text').textContent = prompt;
+Légy konkrét, használj számokat és százalékokat. Ne általánosíts.`;
 }
 
 function formatTable(rows, preferredKeys) {
@@ -796,24 +940,23 @@ function formatTable(rows, preferredKeys) {
   const headers = Object.keys(rows[0]);
   const useKeys = preferredKeys.filter(k => headers.includes(k));
   const finalKeys = useKeys.length >= 2 ? useKeys : headers.slice(0, 8);
-  // filter out 'All' summary rows for breakdown tables
-  const dataRows = rows.filter(r => {
-    const vals = finalKeys.map(k => r[k]);
-    return vals.some(v => v && v !== 'All' && v !== '');
-  });
-  const lines = (dataRows.length ? dataRows : rows).slice(0, 50).map(r =>
+  const dataRows = rows.filter(r => finalKeys.some(k => r[k] && r[k] !== 'All' && r[k] !== ''));
+  return (dataRows.length ? dataRows : rows).slice(0, 50).map(r =>
     finalKeys.map(k => `${k}: ${r[k] ?? '–'}`).join(' | ')
-  );
-  return lines.join('\n');
+  ).join('\n');
 }
 
-function copyPrompt() {
-  const text = document.getElementById('prompt-text').textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = '✓ Másolva!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '📋 Másolás'; btn.classList.remove('copied'); }, 2500);
+// ── NAV ──
+function goScreen(id, step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  setStep(step);
+}
+
+function setStep(n) {
+  ['sh1','sh2','sh3'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'sh-item' + (i+1===n?' active': i+1<n?' done':'');
   });
 }
 
@@ -824,15 +967,15 @@ function switchTab(id, el) {
   document.getElementById(id).classList.add('active');
 }
 
-function setStep(n) {
-  ['sh1','sh2','sh3'].forEach((id,i) => {
-    const el = document.getElementById(id);
-    el.className = 'sh-item' + (i+1===n?' active': i+1<n?' done':'');
-  });
-}
-
+// ── UTILS ──
 function sum(arr, fn) { return arr.reduce((s,r) => s + (fn(r)||0), 0); }
 function emptyRow(cols, msg) { return `<tr><td colspan="${cols}" style="text-align:center;opacity:.35;font-style:italic;padding:24px">${msg}</td></tr>`; }
+
+// Init api key field
+window.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('api-key-input');
+  if (inp && apiKey) inp.value = apiKey;
+});
 </script>
 </body>
 </html>
